@@ -6529,5 +6529,10 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             TXT_homelat.Text = MouseDownStart.Lat.ToString();
             TXT_homelng.Text = MouseDownStart.Lng.ToString();
         }
+
+        private void btnQuShui_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("取水");
+        }
     }
 }
