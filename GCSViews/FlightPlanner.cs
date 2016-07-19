@@ -6715,5 +6715,122 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
         } 
         #endregion
+
+        #region 上升
+
+        private bool isUping = false;
+        public void SendUpCommand()
+        {
+            short returnValue = 0;
+            byte state = 0;
+            try
+            {
+                if (waterColModbus.SendUpOrDownMessage(0x03, 0x0103, ref returnValue))
+                {
+                    SetTbStateText("发送上升命令，正在上升");
+                    SetButtonText(btnUpAndDown,"正在上升");
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    ThreadPool.QueueUserWorkItem((a) =>
+                    {
+                        UpSearchState(ref state, cts);
+                    });
+                }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (GetIsUpingState(waterColModbus, ref state))
+                        {
+                            SetTbStateText("发送上升命令，正在上升");
+                            SetButtonText(btnUpAndDown,"正在上升");
+                            isUping = true;
+                            CancellationTokenSource cts = new CancellationTokenSource();
+                            ThreadPool.QueueUserWorkItem((a) =>
+                            {
+                                UpSearchState(ref state, cts);
+                            });
+                            break;
+                        }
+                        else
+                        {
+                            Thread.Sleep(20000);
+                        }
+                    }
+                    if (!isUping)
+                    {
+                        CustomMessageBox.Show("命令接收失败，建议10s之后重新发送", "警告", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        SetTbStateText("上升未成功");
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                CustomMessageBox.Show(exception.Message, "异常", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                SetTbStateText("上升未成功");
+                isUping = false;
+            }
+        }
+
+        private bool GetIsUpingState(Modbus modbus, ref byte state)
+        {
+            if (modbus.SendUpDownChaXunMessage(0x0103, ref state))
+            {
+                if (state == 0x03 || state == 0x13)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 上升状态查询逻辑
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="cts"></param>
+        private void UpSearchState(ref byte state, CancellationTokenSource cts)
+        {
+            bool isUping = true;
+            while (isUping)
+            {
+                if (waterColModbus.SendUpDownChaXunMessage(0x0103, ref state))
+                {
+                    if (state == 0x03)
+                    {
+                        SetButtonText(btnUpAndDown,"正在上升");
+                        SetTbStateText("发送上升命令，正在上升");
+                        Thread.Sleep(20000);
+                    }
+                    else if (state == 0x13)
+                    {
+                        cts.Cancel();
+                        if (cts.Token.IsCancellationRequested)
+                        {
+                            SetButtonText(btnUpAndDown,"下降");
+                            SetTbStateText("上升完成");
+                            isUping = false;
+                        }
+                    }
+                    else
+                    {
+                        SetTbStateText("发送上升查询，收到错误返回值");
+                        Thread.Sleep(20000);
+                    }
+                }
+                else
+                {
+                    SetTbStateText("发送上升查询命令，未收到返回数据,等待重试");
+                    Thread.Sleep(20000);
+                }
+            }
+        }
+        #endregion
     }
 }
