@@ -6534,5 +6534,14 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         {
             MessageBox.Show("取水");
         }
+        /// <summary>
+        /// 发送下降或者上升命令
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnUpAndDown_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
