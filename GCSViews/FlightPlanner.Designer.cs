@@ -118,12 +118,19 @@
             this.lbl_wpfile = new System.Windows.Forms.Label();
             this.BUT_loadwpfile = new MissionPlanner.Controls.MyButton();
             this.BUT_saveWPFile = new MissionPlanner.Controls.MyButton();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.btnConTest = new MissionPlanner.Controls.MyButton();
+            this.myButton1 = new MissionPlanner.Controls.MyButton();
+            this.btnUpAndDown = new MissionPlanner.Controls.MyButton();
             this.panel6 = new System.Windows.Forms.Panel();
             this.btnShuanTong = new MissionPlanner.Controls.MyButton();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.myLabel2 = new MissionPlanner.Controls.MyLabel();
             this.myLabel1 = new MissionPlanner.Controls.MyLabel();
             this.btnSh = new MissionPlanner.Controls.MyButton();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.tbState = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.panelMap = new System.Windows.Forms.Panel();
             this.lbl_distance = new System.Windows.Forms.Label();
             this.lbl_homedist = new System.Windows.Forms.Label();
@@ -202,10 +209,6 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.btnUpAndDown = new MissionPlanner.Controls.MyButton();
-            this.myButton1 = new MissionPlanner.Controls.MyButton();
-            this.btnConTest = new MissionPlanner.Controls.MyButton();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -215,12 +218,13 @@
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.panelMap.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panelBASE.SuspendLayout();
-            this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // Commands
@@ -679,6 +683,7 @@
             this.flowLayoutPanel1.Controls.Add(this.panel5);
             this.flowLayoutPanel1.Controls.Add(this.panel7);
             this.flowLayoutPanel1.Controls.Add(this.panel6);
+            this.flowLayoutPanel1.Controls.Add(this.panel8);
             resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             // 
@@ -746,6 +751,33 @@
             this.BUT_saveWPFile.UseVisualStyleBackColor = true;
             this.BUT_saveWPFile.Click += new System.EventHandler(this.BUT_saveWPFile_Click);
             // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.btnConTest);
+            this.panel7.Controls.Add(this.myButton1);
+            this.panel7.Controls.Add(this.btnUpAndDown);
+            resources.ApplyResources(this.panel7, "panel7");
+            this.panel7.Name = "panel7";
+            // 
+            // btnConTest
+            // 
+            resources.ApplyResources(this.btnConTest, "btnConTest");
+            this.btnConTest.Name = "btnConTest";
+            this.btnConTest.UseVisualStyleBackColor = true;
+            // 
+            // myButton1
+            // 
+            resources.ApplyResources(this.myButton1, "myButton1");
+            this.myButton1.Name = "myButton1";
+            this.myButton1.UseVisualStyleBackColor = true;
+            // 
+            // btnUpAndDown
+            // 
+            resources.ApplyResources(this.btnUpAndDown, "btnUpAndDown");
+            this.btnUpAndDown.Name = "btnUpAndDown";
+            this.btnUpAndDown.UseVisualStyleBackColor = true;
+            this.btnUpAndDown.Click += new System.EventHandler(this.btnUpAndDown_Click);
+            // 
             // panel6
             // 
             this.panel6.Controls.Add(this.btnShuanTong);
@@ -786,6 +818,24 @@
             this.btnSh.Name = "btnSh";
             this.btnSh.UseVisualStyleBackColor = true;
             this.btnSh.Click += new System.EventHandler(this.btnQuShui_Click);
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.tbState);
+            this.panel8.Controls.Add(this.label7);
+            resources.ApplyResources(this.panel8, "panel8");
+            this.panel8.Name = "panel8";
+            // 
+            // tbState
+            // 
+            resources.ApplyResources(this.tbState, "tbState");
+            this.tbState.Name = "tbState";
+            this.tbState.ReadOnly = true;
+            // 
+            // label7
+            // 
+            resources.ApplyResources(this.label7, "label7");
+            this.label7.Name = "label7";
             // 
             // panelMap
             // 
@@ -1350,33 +1400,6 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // panel7
-            // 
-            this.panel7.Controls.Add(this.btnConTest);
-            this.panel7.Controls.Add(this.myButton1);
-            this.panel7.Controls.Add(this.btnUpAndDown);
-            resources.ApplyResources(this.panel7, "panel7");
-            this.panel7.Name = "panel7";
-            // 
-            // btnUpAndDown
-            // 
-            resources.ApplyResources(this.btnUpAndDown, "btnUpAndDown");
-            this.btnUpAndDown.Name = "btnUpAndDown";
-            this.btnUpAndDown.UseVisualStyleBackColor = true;
-            this.btnUpAndDown.Click += new System.EventHandler(this.btnUpAndDown_Click);
-            // 
-            // myButton1
-            // 
-            resources.ApplyResources(this.myButton1, "myButton1");
-            this.myButton1.Name = "myButton1";
-            this.myButton1.UseVisualStyleBackColor = true;
-            // 
-            // btnConTest
-            // 
-            resources.ApplyResources(this.btnConTest, "btnConTest");
-            this.btnConTest.Name = "btnConTest";
-            this.btnConTest.UseVisualStyleBackColor = true;
-            // 
             // FlightPlanner
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1400,14 +1423,16 @@
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel7.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.panelMap.ResumeLayout(false);
             this.panelMap.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.panelBASE.ResumeLayout(false);
-            this.panel7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1562,5 +1587,8 @@
         private Controls.MyButton btnConTest;
         private Controls.MyButton myButton1;
         private Controls.MyButton btnUpAndDown;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox tbState;
     }
 }

@@ -2402,14 +2402,14 @@ Please check the following
         }
 
         /// <summary>
-        /// Save wp to eeprom
+        /// Save wp to eeprom，自动继续任务为false
         /// </summary>
         /// <param name="loc">location struct</param>
         /// <param name="index">wp no</param>
         /// <param name="frame">global or relative</param>
         /// <param name="current">0 = no , 2 = guided mode</param>
         public MAV_MISSION_RESULT setWP(Locationwp loc, ushort index, MAV_FRAME frame, byte current = 0,
-            byte autocontinue = 1, bool use_int = false)
+            byte autocontinue = 0, bool use_int = false)
         {
             if (use_int)
             {
