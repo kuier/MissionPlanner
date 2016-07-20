@@ -6583,10 +6583,178 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             TXT_homelng.Text = MouseDownStart.Lng.ToString();
         }
 
+        #region 通信
+        public bool TongXinChaXun()
+        {
+            if (waterColModbus.SendTongXinMessage())
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
         private void btnQuShui_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("取水");
+            if (btnQuShui.Text == "取水")
+            {
+                try
+                {
+                    byte samplingNum = Convert.ToByte(tbSamplingNum.Text);
+                    if (samplingNum<1 || samplingNum >8)
+                    {
+                        CustomMessageBox.Show("输入桶号不正确，必须为1-8", "异常", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                        tbState.Text = 1.ToString();
+                        return;
+                    }
+                    SendChouShuiCommand(samplingNum);
+                }
+                catch (Exception exception)
+                {
+                    CustomMessageBox.Show("输入桶号不正确，必须为1-8" + exception.Message, "异常", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    //throw;
+                }
+            }
         }
+        #region 抽水
+
+        private bool isQushui = false;
+        public void SendChouShuiCommand(byte samplingNum)
+        {
+            SetTbStateText("发送通信查询，查询通信状态");
+            SetButtonText(btnQuShui,"通信查询");
+            for (int i = 0; i < 3; i++)
+            {
+                if (TongXinChaXun())
+                {
+                    break;
+                }
+                else
+                {
+                    Thread.Sleep(10000);
+                }
+                if (i == 3)
+                {
+                    CustomMessageBox.Show("通信未成功", "警告", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                    SetTbStateText("通信未成功");
+                    SetButtonText(btnQuShui,"取水");
+                    return;
+                }
+            }
+            if (isQushui)
+            {
+                return;
+            }
+            short quShuiState = 0;
+            byte[] qushuiBytes = new byte[4];
+            //ushort sampling = ushort.Parse((taksTaskPointInfoModel.Sampling).ToString("X4"), NumberStyles.HexNumber);
+            try
+            {
+                if (waterColModbus.SendQuShuiMessage(samplingNum, 2500, ref quShuiState))
+                {
+                    SetTbStateText("发送取水命令，正在取水");
+                    SetButtonText(btnQuShui,"正在取水");
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    ThreadPool.QueueUserWorkItem((a) =>
+                    {
+                        QuShuiState(qushuiBytes, cts);
+                    });
+                }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (GetQushuiState(waterColModbus, ref qushuiBytes))
+                        {
+                            isQushui = true;
+                            SetTbStateText("发送取水命令，正在取水");
+                            SetButtonText(btnQuShui,"正在取水");
+                            CancellationTokenSource cts = new CancellationTokenSource();
+                            ThreadPool.QueueUserWorkItem((a) =>
+                            {
+                                QuShuiState(qushuiBytes, cts);
+                            });
+                            break;
+                        }
+                        else
+                        {
+                            Thread.Sleep(10000);
+                        }
+                    }
+                    if (!isQushui)
+                    {
+                        CustomMessageBox.Show("取水未成功", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        SetTbStateText("取水未成功");
+                        SetButtonText(btnQuShui,"取水");
+                    }
+                    //                    WaterColServiceState = _waterColModbus.modbusStatus+"请稍后重试";
+                }
+            }
+            catch (Exception exception)
+            {
+                CustomMessageBox.Show(exception.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SetTbStateText("取水未成功");
+                SetButtonText(btnQuShui,"取水");
+            }
+
+        }
+
+        private bool GetQushuiState(Modbus modbus, ref byte[] returnBytes)
+        {
+            if (modbus.SendQuShuiChaXunMessage(ref returnBytes))
+            {
+                if (returnBytes[0] == 0x19 || returnBytes[0] == 0x1a)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+
+
+        private void QuShuiState(byte[] qushuiBytes, CancellationTokenSource cts)
+        {
+            bool isQuShuiing = true;
+            while (isQuShuiing)
+            {
+                if (waterColModbus.SendQuShuiChaXunMessage(ref qushuiBytes))
+                {
+                    Console.WriteLine("取水返回的数据：" + BitConverter.ToString(qushuiBytes));
+                    if (qushuiBytes[0] == 0x19)
+                    {
+                        SetButtonText(btnQuShui,"正在取水");
+                        SetTbStateText("发送取水命令，正在取水");
+                        Thread.Sleep(20000);
+                    }
+                    else if (qushuiBytes[0] == 0x1A)
+                    {
+                        isQuShuiing = false;
+                        cts.Cancel();
+                        if (cts.Token.IsCancellationRequested)
+                        {
+                            SetButtonText(btnQuShui,"取水");
+                            SetTbStateText("取水完成");
+                        }
+                    }
+                    else
+                    {
+                        SetTbStateText("发送取水查询命令，收到错误返回值");
+                        Thread.Sleep(15000);
+                    }
+                }
+                else
+                {
+                    SetTbStateText("发送取水查询命令，未收到返回数据，等待重试");
+                    Thread.Sleep(15000);
+                }
+            }
+
+        }
+        #endregion
+
         /// <summary>
         /// 发送下降或者上升命令
         /// </summary>
