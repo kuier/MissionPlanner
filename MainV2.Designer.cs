@@ -161,6 +161,7 @@ namespace MissionPlanner
             // 
             // MenuTerminal
             // 
+            this.MenuTerminal.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
             resources.ApplyResources(this.MenuTerminal, "MenuTerminal");
             this.MenuTerminal.ForeColor = System.Drawing.Color.White;
             this.MenuTerminal.Margin = new System.Windows.Forms.Padding(0);

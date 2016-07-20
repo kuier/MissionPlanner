@@ -402,8 +402,8 @@ namespace MissionPlanner
             }
             else
             {
-                MenuTerminal.Visible = true;
-                MenuSimulation.Visible = true;
+                MenuTerminal.Visible = false;
+                MenuSimulation.Visible = false;
             }
         }
 
@@ -949,7 +949,7 @@ namespace MissionPlanner
                 MenuHelp.Visible = true;
                 MenuInitConfig.Visible = true;
                 MenuSimulation.Visible = true;
-                MenuTerminal.Visible = true;
+                MenuTerminal.Visible = false;
             }
             else
             {
@@ -961,7 +961,7 @@ namespace MissionPlanner
                     MenuHelp.Visible = true;
                     MenuInitConfig.Visible = true;
                     MenuSimulation.Visible = true;
-                    MenuTerminal.Visible = true;
+                    MenuTerminal.Visible = false;
                 }
             }
         }
