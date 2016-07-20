@@ -27,6 +27,7 @@ using GMap.NET.WindowsForms.Markers;
 using GuardShipSystem.Model;
 using Ionic.Zip;
 using log4net;
+using MissionPlanner.Attributes;
 using MissionPlanner.Controls;
 using MissionPlanner.Controls.Waypoints;
 using MissionPlanner.Maps;
@@ -82,6 +83,7 @@ namespace MissionPlanner.GCSViews
             }
         }
         #endregion
+
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         int selectedrow;
         public bool quickadd;
@@ -608,7 +610,7 @@ namespace MissionPlanner.GCSViews
 
             #region 水样采集服务初始化
             waterColModbus = new Modbus();
-            if (waterColModbus.Open("COM15", 9600, 8, Parity.None, StopBits.One))
+            if (waterColModbus.Open("COM10", 9600, 8, Parity.None, StopBits.One))
             {
 
             }
@@ -6605,7 +6607,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
                         CustomMessageBox.Show("输入桶号不正确，必须为1-8", "异常", MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
-                        tbState.Text = 1.ToString();
+                        tbSamplingNum.Text = 1.ToString();
                         return;
                     }
                     SendChouShuiCommand(samplingNum);
@@ -6717,6 +6719,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
         private void QuShuiState(byte[] qushuiBytes, CancellationTokenSource cts)
         {
+            byte count = 0;
             bool isQuShuiing = true;
             while (isQuShuiing)
             {
@@ -6747,7 +6750,14 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 }
                 else
                 {
-                    SetTbStateText("发送取水查询命令，未收到返回数据，等待重试");
+                    SetTbStateText("发送取水查询命令，未收到返回数据，等待第"+count+"次重试");
+                    count ++;
+                    if (count.Equals(5))
+                    {
+                        SetTbStateText("发送取水查询命令，未收到返回数据,请重新取水");
+                        SetButtonText(btnQuShui,"取水");
+                        break;
+                    }
                     Thread.Sleep(15000);
                 }
             }
@@ -7017,6 +7027,13 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 try
                 {
                     byte samplingNum = Convert.ToByte(tbSamplingNum.Text);
+                    if (samplingNum<1 || samplingNum>8)
+                    {
+                        CustomMessageBox.Show("桶号输入错误，请输入1-8.\n" , "异常", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                        tbSamplingNum.Text = 1.ToString();
+                        return;
+                    }
                     SendShuantongCommand(samplingNum);
                 }
                 catch (Exception ex)
@@ -7107,6 +7124,8 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
         private void ShuanTongState(CancellationTokenSource cts, ref byte[] returnBytes)
         {
+            //重试次数
+            int count = 0;
             while (isShuantong)
             {
                 if (waterColModbus.SendShuanTongChaXunMessage(ref returnBytes))
@@ -7135,11 +7154,34 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 }
                 else
                 {
-                    SetTbStateText("发送涮桶查询命令，未收到返回数据，等待重试");
+                    SetTbStateText("发送涮桶查询命令，未收到返回数据，等待第"+count+"次重试");
+                    count++;
+                    if (count.Equals(5))
+                    {
+                        cts.Cancel();
+                        SetTbStateText("发送涮桶查询命令，未收到返回数据，请重新涮桶");
+                        SetButtonText(btnShuanTong,"涮桶");
+                        break;
+                    }
                     Thread.Sleep(20000);
                 }
             }
         }
         #endregion
+
+        private void btnConTest_Click(object sender, EventArgs e)
+        {
+            if (TongXinChaXun())
+            {
+                CustomMessageBox.Show("通信成功", "消息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            CustomMessageBox.Show("通信失败", "消息", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnGetYoseData_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
