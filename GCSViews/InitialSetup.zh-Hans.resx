@@ -146,7 +146,7 @@
     <value>遥控器校准</value>
   </data>
   <data name="backstageViewPageflmode.Text" xml:space="preserve">
-    <value>飞行模式</value>
+    <value>航行模式</value>
   </data>
   <data name="backstageViewPagefs.Text" xml:space="preserve">
     <value>故障保护</value>

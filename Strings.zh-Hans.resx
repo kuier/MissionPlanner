@@ -150,7 +150,7 @@
     <value>接收日志列表时错误</value>
   </data>
   <data name="ErrorNoResponce" xml:space="preserve">
-    <value>错误: 没有来自飞行器的响应</value>
+    <value>错误: 没有来自航行器的响应</value>
   </data>
   <data name="ErrorNotConnected" xml:space="preserve">
     <value>您还没有连接。</value>
@@ -160,7 +160,7 @@
 </value>
   </data>
   <data name="ErrorRejectedByMAV" xml:space="preserve">
-    <value>错误: 飞行器拒绝了命令</value>
+    <value>错误: 航行器拒绝了命令</value>
   </data>
   <data name="ErrorRenameFile" xml:space="preserve">
     <value>重命名文件时出错</value>
@@ -236,7 +236,7 @@
     <value>扩展调参</value>
   </data>
   <data name="FlightModes" xml:space="preserve">
-    <value>飞行模式</value>
+    <value>航行模式</value>
   </data>
   <data name="FullParameterList" xml:space="preserve">
     <value>全部参数表</value>
@@ -484,7 +484,7 @@ Mission Planner waits for 2 valid heartbeat packets before connecting</value>
     <value>自动航点</value>
   </data>
   <data name="EnsurePropsNotOn" xml:space="preserve">
-    <value>确保飞行器没有安装螺旋桨</value>
+    <value>确保航行器没有安装螺旋桨</value>
   </data>
   <data name="FailSafe" xml:space="preserve">
     <value>故障保护</value>

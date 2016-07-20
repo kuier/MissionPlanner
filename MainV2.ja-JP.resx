@@ -130,7 +130,7 @@
     <value>ハードウェア設定</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>ミッション・プランナー - By Michael Oborne</value>
+    <value>ミッション・プランナー</value>
   </data>
   <data name="connectionOptionsToolStripMenuItem.Text" xml:space="preserve">
     <value>接続オプション</value>

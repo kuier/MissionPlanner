@@ -150,7 +150,7 @@
     <value>遥控</value>
   </data>
   <data name="tabOrientation.Text" xml:space="preserve">
-    <value>飞行数据</value>
+    <value>航行数据</value>
   </data>
   <data name="BUT_savecsv.Text" xml:space="preserve">
     <value>保存 CSV</value>

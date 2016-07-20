@@ -245,7 +245,7 @@
     <value>至家的距离</value>
   </data>
   <data name="CHK_disttohomeflightdata.Text" xml:space="preserve">
-    <value>在飞行数据显示</value>
+    <value>在航行数据显示</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
     <value>日志路径</value>

@@ -122,13 +122,13 @@
     <value>472, 18</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
-    <value>这里，我们选择你想要哪个飞行模式，基于你发射机开关的位置。</value>
+    <value>这里，我们选择你想要哪个航行模式，基于你发射机开关的位置。</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>136, 22</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
-    <value>飞行模式选择</value>
+    <value>航行模式选择</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="radialGradientBG1.Image.AccessibleDescription" type="System.Resources.ResXNullRef, System.Windows.Forms">
@@ -199,7 +199,7 @@
     <value>113, 29</value>
   </data>
   <data name="radialGradientBG1.Label.Text" xml:space="preserve">
-    <value>飞行模式</value>
+    <value>航行模式</value>
   </data>
   <data name="radialGradientBG1.Label.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>TopLeft</value>

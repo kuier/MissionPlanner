@@ -206,22 +206,22 @@
     <value>超简单模式</value>
   </data>
   <data name="labelfm1.Text" xml:space="preserve">
-    <value>飞行模式 1</value>
+    <value>航行模式 1</value>
   </data>
   <data name="labelfm2.Text" xml:space="preserve">
-    <value>飞行模式 2</value>
+    <value>航行模式 2</value>
   </data>
   <data name="labelfm3.Text" xml:space="preserve">
-    <value>飞行模式 3</value>
+    <value>航行模式 3</value>
   </data>
   <data name="labelfm4.Text" xml:space="preserve">
-    <value>飞行模式 4</value>
+    <value>航行模式 4</value>
   </data>
   <data name="labelfm5.Text" xml:space="preserve">
-    <value>飞行模式 5</value>
+    <value>航行模式 5</value>
   </data>
   <data name="labelfm6.Text" xml:space="preserve">
-    <value>飞行模式 6</value>
+    <value>航行模式 6</value>
   </data>
   <data name="lbl_currentmode.Text" xml:space="preserve">
     <value>手动</value>
