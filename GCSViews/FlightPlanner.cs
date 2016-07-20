@@ -13,6 +13,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using System.Web.Configuration;
 using System.Windows.Forms;
 using System.Xml;
 using DotSpatial.Data;
@@ -6597,6 +6598,14 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             {
                 SendXiaJiangCommand();
             }
+            else if (btnUpAndDown.Text == "上升")
+            {
+                SendUpCommand();
+            }
+            else
+            {
+                
+            }
         }
 
         #region 下降
@@ -6827,6 +6836,138 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 else
                 {
                     SetTbStateText("发送上升查询命令，未收到返回数据,等待重试");
+                    Thread.Sleep(20000);
+                }
+            }
+        }
+        #endregion
+
+        private void btnShuanTong_Click(object sender, EventArgs e)
+        {
+            if (btnShuanTong.Text == "涮桶")
+            {
+                try
+                {
+                    byte samplingNum = Convert.ToByte(tbSamplingNum.Text);
+                    SendShuantongCommand(samplingNum);
+                }
+                catch (Exception ex)
+                {
+                    CustomMessageBox.Show("桶号输入错误，请输入1-8.\n" + ex.Message, "异常", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    //throw;
+                }
+            }
+        }
+
+        #region 涮桶
+        private bool isShuantong = false;
+
+        private void SendShuantongCommand(byte samplingNum)
+        {
+            if (isShuantong)
+            {
+                return;
+            }
+            short returnValue = 0;
+            byte[] returnBytes = new byte[3];
+            try
+            {
+                if (waterColModbus.SendShuanTongMessage(samplingNum,
+                                byte.Parse("2"), byte.Parse("60"),
+                                ref returnValue))
+                {
+                    isShuantong = true;
+                    SetTbStateText("发送涮桶命令，正在涮桶");
+                    SetButtonText(btnShuanTong,"正在涮桶");
+                    CancellationTokenSource cts = new CancellationTokenSource();
+                    ThreadPool.QueueUserWorkItem((a) =>
+                    {
+                        ShuanTongState(cts, ref returnBytes);
+                    });
+                }
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (GetShuanTongState(waterColModbus, ref returnBytes))
+                        {
+                            SetTbStateText("发送涮桶命令，正在涮桶");
+                            SetButtonText(btnShuanTong,"正在涮桶");
+                            isShuantong = true;
+                            CancellationTokenSource cts = new CancellationTokenSource();
+                            ThreadPool.QueueUserWorkItem((a) =>
+                            {
+                                ShuanTongState(cts, ref returnBytes);
+                            });
+                            break;
+                        }
+                        else
+                        {
+                            Thread.Sleep(10000);
+                        }
+                    }
+                    if (!isShuantong)
+                    {
+                        CustomMessageBox.Show("命令未接收成功，请10s后重试", "警告", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                        SetTbStateText("涮桶未成功");
+                        SetButtonText(btnShuanTong, "涮桶");
+                    }
+
+                }
+            }
+            catch (Exception exception)
+            {
+                CustomMessageBox.Show(exception.Message, "异常",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                SetTbStateText("涮桶未成功");
+                SetButtonText(btnShuanTong, "涮桶");
+            }
+        }
+
+        private bool GetShuanTongState(Modbus modbus, ref byte[] returnBytes)
+        {
+            if (modbus.SendShuanTongChaXunMessage(ref returnBytes))
+            {
+                if (returnBytes[0] == 0x09 || returnBytes[0] == 0x0a)
+                {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+
+        private void ShuanTongState(CancellationTokenSource cts, ref byte[] returnBytes)
+        {
+            while (isShuantong)
+            {
+                if (waterColModbus.SendShuanTongChaXunMessage(ref returnBytes))
+                {
+                    if (returnBytes[0] == 0x09)
+                    {
+                        SetTbStateText("发送涮桶命令，正在涮桶");
+                        SetButtonText(btnShuanTong,"正在涮桶");
+                        Thread.Sleep(20000);
+                    }
+                    else if (returnBytes[0] == 0x0a)
+                    {
+                        isShuantong = false;
+                        cts.Cancel();
+                        if (cts.Token.IsCancellationRequested)
+                        {
+                            SetTbStateText("发送涮桶命令，涮桶完成");
+                            SetButtonText(btnShuanTong,"涮桶");
+                        }
+                    }
+                    else
+                    {
+                        SetTbStateText("发送涮桶查询命令，收到错误返回值");
+                        Thread.Sleep(20000);
+                    }
+                }
+                else
+                {
+                    SetTbStateText("发送涮桶查询命令，未收到返回数据，等待重试");
                     Thread.Sleep(20000);
                 }
             }
