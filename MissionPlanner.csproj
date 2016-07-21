@@ -176,6 +176,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DLLs\mtrand.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ObjectListView">
       <HintPath>packages\Unofficial.ObjectListView.2.6.0\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
@@ -767,6 +771,7 @@
     <Compile Include="Mavlink\MAVList.cs" />
     <Compile Include="Mavlink\MAVState.cs" />
     <Compile Include="Models\WucanshuDataModel.cs" />
+    <Compile Include="Models\WucanshuState.cs" />
     <Compile Include="MovingBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -800,6 +805,7 @@
       <DependentUpon>PluginUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ConfigCameraStabModel.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Radio\XModem.cs" />
     <Compile Include="ScriptConsole.cs">
       <SubType>Form</SubType>
@@ -2539,6 +2545,7 @@
     </None>
     <None Include="LogAnalyzer\py2exe\createexe.bat" />
     <None Include="LogAnalyzer\upload.bat" />
+    <None Include="Properties\DataSources\MissionPlanner.Models.WucanshuState.datasource" />
     <None Include="Utilities\ImageOverFilter.cs" />
     <EmbeddedResource Include="Antenna\Tracker.id-ID.resx">
       <DependentUpon>Tracker.cs</DependentUpon>

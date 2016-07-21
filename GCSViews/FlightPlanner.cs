@@ -84,6 +84,8 @@ namespace MissionPlanner.GCSViews
                 b.Text = text;
             }
         }
+
+        protected WucanshuState wucanshuState = new WucanshuState();
         #endregion
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -631,6 +633,8 @@ namespace MissionPlanner.GCSViews
             {
                 CustomMessageBox.Show("五参数数据端口出错，请检查COM11端口，然后重试", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
+            label8.DataBindings.Add("Text", wucanshuState, "DoValue");
             #endregion
         }
 
@@ -7254,23 +7258,22 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         {
             if (btnGetYoseData.Text == "获取五参数")
             {
-                if (_isWucanshuRunning)
-                {
-                    _wucanshuTimer.Elapsed -= _wucanshuTimer_Elapsed;
-                    _wucanshuTimer.Stop();
-                    _isWucanshuRunning = false;
-                    SetButtonText(btnGetYoseData,"正在获取五参数");
-                }
-                else
-                {
-                    _wucanshuTimer = new System.Timers.Timer(5000);
-                    _wucanshuTimer.Elapsed += _wucanshuTimer_Elapsed;
-                    _wucanshuTimer.Start();
-                    SetButtonText(btnGetYoseData,"获取五参数");
-                    _isWucanshuRunning = true;
-                }
+                _wucanshuTimer = new System.Timers.Timer(5000);
+                _wucanshuTimer.Elapsed += _wucanshuTimer_Elapsed;
+                _wucanshuTimer.Start();
+                SetButtonText(btnGetYoseData, "停止获取五参数");
+                _isWucanshuRunning = true;
+            }
+            else
+            {
+                _wucanshuTimer.Elapsed -= _wucanshuTimer_Elapsed;
+                _wucanshuTimer.Stop();
+                _isWucanshuRunning = false;
+                SetButtonText(btnGetYoseData, "获取五参数");
             }
         }
+
+        private int tempValue1 = 0;
         void _wucanshuTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             WucanshuDataModel wucanshuDataModel = new WucanshuDataModel();
@@ -7278,53 +7281,56 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             switch (_wucanshuTimeFlag)
             {
                 case 0:
+                    tempValue1++;
+                    wucanshuState.DoValue = tempValue1;
                     _wucanshuTimeFlag++;
-                    tempValue = GetDoValue();
-                    if (Math.Abs(tempValue-0.0)>=0.1)
-                    {
-                        CurrentState.DoValue = tempValue;
-                        wucanshuDataModel.DoValue = tempValue;
-                    }
+//                    tempValue = GetDoValue();
+//                    if (Math.Abs(tempValue-0.0)>=0.1)
+//                    {
+//                        CurrentState.DoValue = tempValue;
+//                        wucanshuDataModel.DoValue = tempValue;
+//                    }
                     break;
                 case 1:
-                    tempValue = GetTurValue();
                     _wucanshuTimeFlag++;
-                    if (Math.Abs(tempValue-0.0)>=0.1)
-                    {
-                        CurrentState.TurValue = tempValue;
-                        wucanshuDataModel.TurValue = tempValue;
-
-                    }
+                    wucanshuState.TurValue = _wucanshuTimeFlag;
+//                    tempValue = GetTurValue();
+//                    if (Math.Abs(tempValue-0.0)>=0.1)
+//                    {
+//                        CurrentState.TurValue = tempValue;
+//                        wucanshuDataModel.TurValue = tempValue;
+//
+//                    }
                     break;
                 case 2:
-                    tempValue = GetCtValue();
                     _wucanshuTimeFlag++;
-                    if (Math.Abs(tempValue-0.0)>=0.1)
-                    {
-                        CurrentState.CtValue = tempValue;
-                        wucanshuDataModel.CtValue = tempValue;
-
-                    }
+//                    tempValue = GetCtValue();
+//                    if (Math.Abs(tempValue-0.0)>=0.1)
+//                    {
+//                        CurrentState.CtValue = tempValue;
+//                        wucanshuDataModel.CtValue = tempValue;
+//
+//                    }
                     break;
                 case 3:
-                    tempValue= GetPhValue();
                     _wucanshuTimeFlag++;
-                    if (Math.Abs(tempValue-0.0)>=0.1)
-                    {
-                        CurrentState.PHValue = tempValue;
-                        wucanshuDataModel.PhValue = tempValue;
-
-                    }
+//                    tempValue = GetPhValue();
+//                    if (Math.Abs(tempValue-0.0)>=0.1)
+//                    {
+//                        CurrentState.PHValue = tempValue;
+//                        wucanshuDataModel.PhValue = tempValue;
+//
+//                    }
                     break;
                 case 4:
-                    tempValue = GetTempValue();
                     _wucanshuTimeFlag++;
-                    if (Math.Abs(tempValue - 0.0) >= 0.1)
-                    {
-                        CurrentState.TempValue = tempValue;
-                        wucanshuDataModel.TempValue = tempValue;
-
-                    }
+//                    tempValue = GetTempValue();
+//                    if (Math.Abs(tempValue - 0.0) >= 0.1)
+//                    {
+//                        CurrentState.TempValue = tempValue;
+//                        wucanshuDataModel.TempValue = tempValue;
+//
+//                    }
                     break;
                 default:
                     _wucanshuTimeFlag = 0;

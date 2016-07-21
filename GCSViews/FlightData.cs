@@ -333,6 +333,7 @@ namespace MissionPlanner.GCSViews
 
             // first run
             MainV2_AdvancedChanged(null, null);
+            ThemeManager.ApplyThemeTo(quickView10);
         }
 
         protected override void OnInvalidated(InvalidateEventArgs e)
@@ -569,8 +570,8 @@ namespace MissionPlanner.GCSViews
                         log.Debug(ex);
                     }
                 }
-            }
 
+            }
             CheckBatteryShow();
 
             // make sure the hud user items/warnings/checklist are using the current state
@@ -4352,6 +4353,17 @@ namespace MissionPlanner.GCSViews
         private void onOffCameraOverlapToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CameraOverlap = onOffCameraOverlapToolStripMenuItem.Checked;
+        }
+
+        private void tabLayoutWucanshu_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabWucanshu_Resize(object sender, EventArgs e)
+        {
+            tabLayoutWucanshu.Width = tabQuick.Width;
+            tabLayoutWucanshu.AutoScroll = false;
         }
     }
 }
