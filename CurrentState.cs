@@ -8,7 +8,9 @@ using log4net;
 using MissionPlanner.Attributes;
 using MissionPlanner;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using DirectShowLib;
+using GMap.NET;
 
 namespace MissionPlanner
 {
@@ -47,6 +49,22 @@ namespace MissionPlanner
         {
             return input/multiplierspeed;
         }
+
+        public static PointLatLng CurrentPosition = new PointLatLng();
+
+        #region 五参数数据
+        [DisplayText("溶解氧(mg/L)")]
+        public static float DoValue { get; set; }
+        [DisplayText("浊度(NTU)")]
+        public static float TurValue { get; set; }
+        [DisplayText("电导率(ms/cm)")]
+        public static float CtValue { get; set; }
+        [DisplayText("PH")]
+        public static float PHValue { get; set; }
+        [DisplayText("温度(℃)")]
+        public static float TempValue { get; set; }
+        #endregion
+
 
         // orientation - rads
         [DisplayText("Roll (deg)")]
@@ -1670,6 +1688,9 @@ namespace MissionPlanner
                         {
                             lat = loc.lat/10000000.0;
                             lng = loc.lon/10000000.0;
+
+                            CurrentPosition.Lat = lat;
+                            CurrentPosition.Lng = lng;
 
                             altasl = loc.alt/1000.0f;
                         }

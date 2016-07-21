@@ -13,6 +13,7 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using System.Timers;
 using System.Web.Configuration;
 using System.Windows.Forms;
 using System.Xml;
@@ -31,6 +32,7 @@ using MissionPlanner.Attributes;
 using MissionPlanner.Controls;
 using MissionPlanner.Controls.Waypoints;
 using MissionPlanner.Maps;
+using MissionPlanner.Models;
 using MissionPlanner.Properties;
 using MissionPlanner.Service;
 using MissionPlanner.Utilities;
@@ -51,7 +53,7 @@ namespace MissionPlanner.GCSViews
         #region 水样采集服务
 
         private Modbus waterColModbus;
-
+        private Modbus wucanshuModbus;
         //设置tbState委托
         delegate void SetTbStateTextDelegate(string text);
 
@@ -618,6 +620,16 @@ namespace MissionPlanner.GCSViews
             {
                 CustomMessageBox.Show("水样采集端口打开失败，检查COM10端口，然后重试", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
+            }
+
+            wucanshuModbus = new Modbus();
+            if (wucanshuModbus.Open("COM11",9600,8,Parity.None, StopBits.One))
+            {
+                
+            }
+            else
+            {
+                CustomMessageBox.Show("五参数数据端口出错，请检查COM11端口，然后重试", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             #endregion
         }
@@ -7179,9 +7191,149 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             CustomMessageBox.Show("通信失败", "消息", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        #region Value[]
+        private short[] _dovalues = new short[2];
+        private short[] _turvalues = new short[2];
+        private short[] _ctvalues = new short[2];
+        private short[] _phvalues = new short[2];
+        private short[] _tempvalues = new short[2];
+        #endregion
+        #region 获取五参数数据
+        public float GetDoValue()
+        {
+            wucanshuModbus.SendFc3(Convert.ToByte(01), 0x01, 0002, ref _dovalues);
+            return ConvertToFloat(_dovalues);
+        }
+
+        public float GetTurValue()
+        {
+            wucanshuModbus.SendFc3(Convert.ToByte(01), 0x02, 0002, ref _turvalues);
+            return ConvertToFloat(_turvalues);
+        }
+
+        public float GetCtValue()
+        {
+            wucanshuModbus.SendFc3(Convert.ToByte(01), 0x03, 0002, ref _ctvalues);
+            return ConvertToFloat(_ctvalues);
+        }
+
+        public float GetPhValue()
+        {
+            wucanshuModbus.SendFc3(Convert.ToByte(01), 0x04, 0002, ref _phvalues);
+            return ConvertToFloat(_phvalues);
+        }
+
+        public float GetTempValue()
+        {
+            wucanshuModbus.SendFc3(Convert.ToByte(01), 0x06, 0002, ref _tempvalues);
+            return ConvertToFloat(_tempvalues);
+        }
+        #endregion
+
+        #region Short转Float
+        //short[] 转float
+        private float ConvertToFloat(short[] buffer)
+        {
+            byte[] bytes = new byte[4];
+            bytes[0] = (byte)(buffer[1] & 0xFF);
+            bytes[1] = (byte)(buffer[1] >> 8);
+            bytes[2] = (byte)(buffer[0] & 0xFF);
+            bytes[3] = (byte)(buffer[0] >> 8);
+            Array.Reverse(bytes);
+            float value = BitConverter.ToSingle(bytes, 0);
+            return value;
+        }
+        #endregion
+
+        private bool _isWucanshuRunning = false;
+        private System.Timers.Timer _wucanshuTimer;
+        private int _wucanshuTimeFlag;
+        private float tempValue;
+        private List<WucanshuDataModel> wucanshuDataModels = new List<WucanshuDataModel>(); 
         private void btnGetYoseData_Click(object sender, EventArgs e)
         {
+            if (btnGetYoseData.Text == "获取五参数")
+            {
+                if (_isWucanshuRunning)
+                {
+                    _wucanshuTimer.Elapsed -= _wucanshuTimer_Elapsed;
+                    _wucanshuTimer.Stop();
+                    _isWucanshuRunning = false;
+                    SetButtonText(btnGetYoseData,"正在获取五参数");
+                }
+                else
+                {
+                    _wucanshuTimer = new System.Timers.Timer(5000);
+                    _wucanshuTimer.Elapsed += _wucanshuTimer_Elapsed;
+                    _wucanshuTimer.Start();
+                    SetButtonText(btnGetYoseData,"获取五参数");
+                    _isWucanshuRunning = true;
+                }
+            }
+        }
+        void _wucanshuTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            WucanshuDataModel wucanshuDataModel = new WucanshuDataModel();
+            wucanshuDataModel.Position = CurrentState.CurrentPosition;
+            switch (_wucanshuTimeFlag)
+            {
+                case 0:
+                    _wucanshuTimeFlag++;
+                    tempValue = GetDoValue();
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.DoValue = tempValue;
+                        wucanshuDataModel.DoValue = tempValue;
+                    }
+                    break;
+                case 1:
+                    tempValue = GetTurValue();
+                    _wucanshuTimeFlag++;
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.TurValue = tempValue;
+                        wucanshuDataModel.TurValue = tempValue;
 
+                    }
+                    break;
+                case 2:
+                    tempValue = GetCtValue();
+                    _wucanshuTimeFlag++;
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.CtValue = tempValue;
+                        wucanshuDataModel.CtValue = tempValue;
+
+                    }
+                    break;
+                case 3:
+                    tempValue= GetPhValue();
+                    _wucanshuTimeFlag++;
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.PHValue = tempValue;
+                        wucanshuDataModel.PhValue = tempValue;
+
+                    }
+                    break;
+                case 4:
+                    tempValue = GetTempValue();
+                    _wucanshuTimeFlag++;
+                    if (Math.Abs(tempValue - 0.0) >= 0.1)
+                    {
+                        CurrentState.TempValue = tempValue;
+                        wucanshuDataModel.TempValue = tempValue;
+
+                    }
+                    break;
+                default:
+                    _wucanshuTimeFlag = 0;
+                    if(Math.Abs(wucanshuDataModel.DoValue - 0.0)>=0.1)
+                    {
+                        wucanshuDataModels.Add(wucanshuDataModel);
+                    }
+                    break;
+            }
         }
     }
 }
