@@ -59,6 +59,8 @@ namespace MissionPlanner.GCSViews
 
         private delegate void SetButtonTextDelegate(Button b, string text);
 
+        private delegate void SetLabelTextDelegate(MyLabel l, string text);
+
         private void SetTbStateText(string text)
         {
             if (this.tbState.InvokeRequired)
@@ -82,6 +84,19 @@ namespace MissionPlanner.GCSViews
             else
             {
                 b.Text = text;
+            }
+        }
+
+        private void SetLabelText(MyLabel l, string text)
+        {
+            if (l.InvokeRequired)
+            {
+                SetLabelTextDelegate setLabelTextDelegate = new SetLabelTextDelegate(SetLabelText);
+                this.Invoke(setLabelTextDelegate, new object[] {l, text});
+            }
+            else
+            {
+                l.Text = text;
             }
         }
 
@@ -478,6 +493,7 @@ namespace MissionPlanner.GCSViews
 
             InitializeComponent();
 
+
             // config map             
             MainMap.CacheLocation = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar +
                                     "gmapcache" + Path.DirectorySeparatorChar;
@@ -633,8 +649,6 @@ namespace MissionPlanner.GCSViews
             {
                 CustomMessageBox.Show("五参数数据端口出错，请检查COM11端口，然后重试", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-            label8.DataBindings.Add("Text", wucanshuState, "DoValue");
             #endregion
         }
 
@@ -6641,32 +6655,34 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private bool isQushui = false;
         public void SendChouShuiCommand(byte samplingNum)
         {
-            SetTbStateText("发送通信查询，查询通信状态");
-            SetButtonText(btnQuShui,"通信查询");
-            for (int i = 0; i < 3; i++)
-            {
-                if (TongXinChaXun())
-                {
-                    break;
-                }
-                else
-                {
-                    Thread.Sleep(10000);
-                }
-                if (i == 3)
-                {
-                    CustomMessageBox.Show("通信未成功", "警告", MessageBoxButtons.OK,MessageBoxIcon.Warning);
-                    SetTbStateText("通信未成功");
-                    SetButtonText(btnQuShui,"取水");
-                    return;
-                }
-            }
+//            SetTbStateText("发送通信查询，查询通信状态");
+//            SetButtonText(btnQuShui,"通信查询");
+//            for (int i = 0; i < 3; i++)
+//            {
+//                if (TongXinChaXun())
+//                {
+//                    break;
+//                }
+//                else
+//                {
+//                    Thread.Sleep(10000);
+//                }
+//                if (i == 3)
+//                {
+//                    CustomMessageBox.Show("通信未成功", "警告", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+//                    SetTbStateText("通信未成功");
+//                    SetButtonText(btnQuShui,"取水");
+//                    return;
+//                }
+//            }
             if (isQushui)
             {
                 return;
             }
             short quShuiState = 0;
             byte[] qushuiBytes = new byte[4];
+            SetButtonText(btnQuShui, "正在取水");
+            SetTbStateText("发送取水命令，正在取水");
             //ushort sampling = ushort.Parse((taksTaskPointInfoModel.Sampling).ToString("X4"), NumberStyles.HexNumber);
             try
             {
@@ -7072,6 +7088,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             short returnValue = 0;
             byte[] returnBytes = new byte[3];
+            SetButtonText(btnShuanTong, "正在涮桶");
             try
             {
                 if (waterColModbus.SendShuanTongMessage(samplingNum,
@@ -7269,11 +7286,12 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 _wucanshuTimer.Elapsed -= _wucanshuTimer_Elapsed;
                 _wucanshuTimer.Stop();
                 _isWucanshuRunning = false;
+                SetLabelText(labelWucanshuState, "五参数状态");
+
                 SetButtonText(btnGetYoseData, "获取五参数");
             }
         }
 
-        private int tempValue1 = 0;
         void _wucanshuTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             WucanshuDataModel wucanshuDataModel = new WucanshuDataModel();
@@ -7281,56 +7299,63 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             switch (_wucanshuTimeFlag)
             {
                 case 0:
-                    tempValue1++;
-                    wucanshuState.DoValue = tempValue1;
+                    SetLabelText(labelWucanshuState,"正在获取溶解氧");
                     _wucanshuTimeFlag++;
-//                    tempValue = GetDoValue();
-//                    if (Math.Abs(tempValue-0.0)>=0.1)
-//                    {
-//                        CurrentState.DoValue = tempValue;
-//                        wucanshuDataModel.DoValue = tempValue;
-//                    }
+                    tempValue = GetDoValue();
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.DoValue = tempValue;
+                        SetLabelText(doLabelValue,tempValue.ToString());
+                        wucanshuDataModel.DoValue = tempValue;
+                    }
                     break;
                 case 1:
+                    SetLabelText(labelWucanshuState, "正在获取浊度");
                     _wucanshuTimeFlag++;
                     wucanshuState.TurValue = _wucanshuTimeFlag;
-//                    tempValue = GetTurValue();
-//                    if (Math.Abs(tempValue-0.0)>=0.1)
-//                    {
-//                        CurrentState.TurValue = tempValue;
-//                        wucanshuDataModel.TurValue = tempValue;
-//
-//                    }
+                    tempValue = GetTurValue();
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.TurValue = tempValue;
+                        wucanshuDataModel.TurValue = tempValue;
+                        SetLabelText(turLabelValue,tempValue.ToString());
+                    }
                     break;
                 case 2:
+                    SetLabelText(labelWucanshuState, "正在获取电导");
+
                     _wucanshuTimeFlag++;
-//                    tempValue = GetCtValue();
-//                    if (Math.Abs(tempValue-0.0)>=0.1)
-//                    {
-//                        CurrentState.CtValue = tempValue;
-//                        wucanshuDataModel.CtValue = tempValue;
-//
-//                    }
+                    tempValue = GetCtValue();
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.CtValue = tempValue;
+                        wucanshuDataModel.CtValue = tempValue;
+                        SetLabelText(ctLabelValue,tempValue.ToString());
+                    }
                     break;
                 case 3:
+                    SetLabelText(labelWucanshuState, "正在获取PH");
+
                     _wucanshuTimeFlag++;
-//                    tempValue = GetPhValue();
-//                    if (Math.Abs(tempValue-0.0)>=0.1)
-//                    {
-//                        CurrentState.PHValue = tempValue;
-//                        wucanshuDataModel.PhValue = tempValue;
-//
-//                    }
+                    tempValue = GetPhValue();
+                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    {
+                        CurrentState.PHValue = tempValue;
+                        wucanshuDataModel.PhValue = tempValue;
+                        SetLabelText(phLabelValue,tempValue.ToString());
+                    }
                     break;
                 case 4:
+                    SetLabelText(labelWucanshuState, "正在获取温度");
+
                     _wucanshuTimeFlag++;
-//                    tempValue = GetTempValue();
-//                    if (Math.Abs(tempValue - 0.0) >= 0.1)
-//                    {
-//                        CurrentState.TempValue = tempValue;
-//                        wucanshuDataModel.TempValue = tempValue;
-//
-//                    }
+                    tempValue = GetTempValue();
+                    if (Math.Abs(tempValue - 0.0) >= 0.1)
+                    {
+                        CurrentState.TempValue = tempValue;
+                        wucanshuDataModel.TempValue = tempValue;
+                        SetLabelText(tempLabelValue,tempValue.ToString());
+                    }
                     break;
                 default:
                     _wucanshuTimeFlag = 0;
@@ -7341,5 +7366,6 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     break;
             }
         }
+
     }
 }
