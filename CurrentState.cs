@@ -53,16 +53,16 @@ namespace MissionPlanner
         public static PointLatLng CurrentPosition = new PointLatLng();
 
         #region 五参数数据
-        [DisplayText("溶解氧(mg/L)")]
-        public static float DoValue { get; set; }
-        [DisplayText("浊度(NTU)")]
-        public static float TurValue { get; set; }
-        [DisplayText("电导率(ms/cm)")]
-        public static float CtValue { get; set; }
-        [DisplayText("PH")]
-        public static float PHValue { get; set; }
-        [DisplayText("温度(℃)")]
-        public static float TempValue { get; set; }
+//        [DisplayText("溶解氧(mg/L)")]
+//        public static float DoValue { get; set; }
+//        [DisplayText("浊度(NTU)")]
+//        public static float TurValue { get; set; }
+//        [DisplayText("电导率(ms/cm)")]
+//        public static float CtValue { get; set; }
+//        [DisplayText("PH")]
+//        public static float PHValue { get; set; }
+//        [DisplayText("温度(℃)")]
+//        public static float TempValue { get; set; }
         #endregion
 
 

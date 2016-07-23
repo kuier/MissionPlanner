@@ -6,7 +6,7 @@ using GMap.NET;
 
 namespace MissionPlanner.Models
 {
-    public class WucanshuDataModel
+    public struct WucanshuDataModel
     {
         public PointLatLng Position { get; set; }
         public float DoValue { get; set; }

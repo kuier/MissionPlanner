@@ -1400,6 +1400,30 @@
   <data name="&gt;&gt;panel5.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="btnWucanshuFenxi.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 92</value>
+  </data>
+  <data name="btnWucanshuFenxi.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 23</value>
+  </data>
+  <data name="btnWucanshuFenxi.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="btnWucanshuFenxi.Text" xml:space="preserve">
+    <value>五参数分析</value>
+  </data>
+  <data name="&gt;&gt;btnWucanshuFenxi.Name" xml:space="preserve">
+    <value>btnWucanshuFenxi</value>
+  </data>
+  <data name="&gt;&gt;btnWucanshuFenxi.Type" xml:space="preserve">
+    <value>MissionPlanner.Controls.MyButton, MissionPlanner.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnWucanshuFenxi.Parent" xml:space="preserve">
+    <value>panel7</value>
+  </data>
+  <data name="&gt;&gt;btnWucanshuFenxi.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnConTest.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1425,7 +1449,7 @@
     <value>panel7</value>
   </data>
   <data name="&gt;&gt;btnConTest.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="btnGetYoseData.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1452,7 +1476,7 @@
     <value>panel7</value>
   </data>
   <data name="&gt;&gt;btnGetYoseData.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="btnUpAndDown.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1479,7 +1503,7 @@
     <value>panel7</value>
   </data>
   <data name="&gt;&gt;btnUpAndDown.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="panel7.Location" type="System.Drawing.Point, System.Drawing">
     <value>140, 102</value>

@@ -133,6 +133,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.labelWucanshuState = new MissionPlanner.Controls.MyLabel();
+            this.label8 = new System.Windows.Forms.Label();
             this.tempLabelValue = new MissionPlanner.Controls.MyLabel();
             this.phLabelValue = new MissionPlanner.Controls.MyLabel();
             this.ctLabelValue = new MissionPlanner.Controls.MyLabel();
@@ -221,8 +223,7 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label8 = new System.Windows.Forms.Label();
-            this.labelWucanshuState = new MissionPlanner.Controls.MyLabel();
+            this.btnWucanshuFenxi = new MissionPlanner.Controls.MyButton();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panelWaypoints.SuspendLayout();
             this.panelAction.SuspendLayout();
@@ -770,6 +771,7 @@
             // 
             // panel7
             // 
+            this.panel7.Controls.Add(this.btnWucanshuFenxi);
             this.panel7.Controls.Add(this.btnConTest);
             this.panel7.Controls.Add(this.btnGetYoseData);
             this.panel7.Controls.Add(this.btnUpAndDown);
@@ -880,6 +882,17 @@
             this.panel9.Controls.Add(this.doLabel);
             resources.ApplyResources(this.panel9, "panel9");
             this.panel9.Name = "panel9";
+            // 
+            // labelWucanshuState
+            // 
+            resources.ApplyResources(this.labelWucanshuState, "labelWucanshuState");
+            this.labelWucanshuState.Name = "labelWucanshuState";
+            this.labelWucanshuState.resize = false;
+            // 
+            // label8
+            // 
+            resources.ApplyResources(this.label8, "label8");
+            this.label8.Name = "label8";
             // 
             // tempLabelValue
             // 
@@ -1499,16 +1512,11 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // label8
+            // btnWucanshuFenxi
             // 
-            resources.ApplyResources(this.label8, "label8");
-            this.label8.Name = "label8";
-            // 
-            // labelWucanshuState
-            // 
-            resources.ApplyResources(this.labelWucanshuState, "labelWucanshuState");
-            this.labelWucanshuState.Name = "labelWucanshuState";
-            this.labelWucanshuState.resize = false;
+            resources.ApplyResources(this.btnWucanshuFenxi, "btnWucanshuFenxi");
+            this.btnWucanshuFenxi.Name = "btnWucanshuFenxi";
+            this.btnWucanshuFenxi.UseVisualStyleBackColor = true;
             // 
             // FlightPlanner
             // 
@@ -1717,5 +1725,6 @@
         private Controls.MyLabel doLabelValue;
         private Controls.MyLabel labelWucanshuState;
         private System.Windows.Forms.Label label8;
+        private Controls.MyButton btnWucanshuFenxi;
     }
 }

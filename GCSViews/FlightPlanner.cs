@@ -36,6 +36,7 @@ using MissionPlanner.Models;
 using MissionPlanner.Properties;
 using MissionPlanner.Service;
 using MissionPlanner.Utilities;
+using Newtonsoft.Json;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpKml.Base;
@@ -54,6 +55,8 @@ namespace MissionPlanner.GCSViews
 
         private Modbus waterColModbus;
         private Modbus wucanshuModbus;
+        WucanshuDataModel wucanshuDataModel = new WucanshuDataModel();
+
         //设置tbState委托
         delegate void SetTbStateTextDelegate(string text);
 
@@ -7289,22 +7292,30 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 SetLabelText(labelWucanshuState, "五参数状态");
 
                 SetButtonText(btnGetYoseData, "获取五参数");
+
+                try
+                {
+                    string fileName = DateTime.Now.ToLongDateString() + "五参数数据.json";
+                    File.WriteAllText(fileName,JsonConvert.SerializeObject(wucanshuDataModels));
+                }
+                catch (Exception ex)
+                {
+                    CustomMessageBox.Show("保存数据到文件出错" + ex.Message, "异常", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
         void _wucanshuTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            WucanshuDataModel wucanshuDataModel = new WucanshuDataModel();
-            wucanshuDataModel.Position = CurrentState.CurrentPosition;
             switch (_wucanshuTimeFlag)
             {
                 case 0:
                     SetLabelText(labelWucanshuState,"正在获取溶解氧");
                     _wucanshuTimeFlag++;
                     tempValue = GetDoValue();
-                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    if (Math.Abs(tempValue-0.0)>=0.01)
                     {
-                        CurrentState.DoValue = tempValue;
+//                        CurrentState.DoValue = tempValue;
                         SetLabelText(doLabelValue,tempValue.ToString());
                         wucanshuDataModel.DoValue = tempValue;
                     }
@@ -7314,9 +7325,9 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     _wucanshuTimeFlag++;
                     wucanshuState.TurValue = _wucanshuTimeFlag;
                     tempValue = GetTurValue();
-                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    if (Math.Abs(tempValue-0.0)>=0.01)
                     {
-                        CurrentState.TurValue = tempValue;
+//                        CurrentState.TurValue = tempValue;
                         wucanshuDataModel.TurValue = tempValue;
                         SetLabelText(turLabelValue,tempValue.ToString());
                     }
@@ -7326,9 +7337,9 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
                     _wucanshuTimeFlag++;
                     tempValue = GetCtValue();
-                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    if (Math.Abs(tempValue-0.0)>=0.01)
                     {
-                        CurrentState.CtValue = tempValue;
+//                        CurrentState.CtValue = tempValue;
                         wucanshuDataModel.CtValue = tempValue;
                         SetLabelText(ctLabelValue,tempValue.ToString());
                     }
@@ -7338,9 +7349,9 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
                     _wucanshuTimeFlag++;
                     tempValue = GetPhValue();
-                    if (Math.Abs(tempValue-0.0)>=0.1)
+                    if (Math.Abs(tempValue-0.0)>=0.01)
                     {
-                        CurrentState.PHValue = tempValue;
+//                        CurrentState.PHValue = tempValue;
                         wucanshuDataModel.PhValue = tempValue;
                         SetLabelText(phLabelValue,tempValue.ToString());
                     }
@@ -7350,17 +7361,18 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
                     _wucanshuTimeFlag++;
                     tempValue = GetTempValue();
-                    if (Math.Abs(tempValue - 0.0) >= 0.1)
+                    if (Math.Abs(tempValue - 0.0) >= 0.01)
                     {
-                        CurrentState.TempValue = tempValue;
+//                        CurrentState.TempValue = tempValue;
                         wucanshuDataModel.TempValue = tempValue;
                         SetLabelText(tempLabelValue,tempValue.ToString());
                     }
                     break;
                 default:
                     _wucanshuTimeFlag = 0;
-                    if(Math.Abs(wucanshuDataModel.DoValue - 0.0)>=0.1)
+                    if(Math.Abs(wucanshuDataModel.DoValue - 0.0)>=0.01)
                     {
+                        wucanshuDataModel.Position = CurrentState.CurrentPosition;
                         wucanshuDataModels.Add(wucanshuDataModel);
                     }
                     break;
