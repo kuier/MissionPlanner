@@ -165,6 +165,9 @@
   <data name="CHK_showconsole.Text" xml:space="preserve">
     <value>Show Console Window (restart)</value>
   </data>
+  <data name="CHK_showconsole.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="&gt;&gt;CHK_showconsole.Name" xml:space="preserve">
     <value>CHK_showconsole</value>
   </data>
@@ -224,6 +227,9 @@
   </data>
   <data name="linkLabel1.Text" xml:space="preserve">
     <value>Change Log</value>
+  </data>
+  <data name="linkLabel1.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
   <data name="&gt;&gt;linkLabel1.Name" xml:space="preserve">
     <value>linkLabel1</value>

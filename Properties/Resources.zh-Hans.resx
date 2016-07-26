@@ -129,7 +129,6 @@
 }}}}}}
 
 \pard\nowidctlpar\sa200\sl276\slmult1\cf1\f0\fs22\par
-\tab 下面更新了快捷键列表\par
 \tab 欢迎使用\b Mission Planner\b0 ，本软件可以为无人船(\b UAV\b0 )规划任务。\par
 \tab 快速入门：\par
 \tab\tab\tab\b 航行数据 \endash  \b0 带有位置和姿态的简单航行屏幕。\par
@@ -139,40 +138,17 @@
 
 \pard\nowidctlpar\b\tab 主开发者:\b0  Michael Oborne\par
 \par
-\b 帮助:请联系山东盈渡电子
+\tab\b 帮助:请联系山东盈渡电子
 \par
+\tab\b 工作流程：\b0
 \par
-\b快捷键\b0\par
+\pard\tab 1.使用无线网卡连接到网络，使用管理员权限打开\b NAT123 \b0，修改\b其他列表\b0里的工业笔记本电脑内网IP为本机IP
 \par
-主屏幕\par
-F2 - 航行数据\par
-F3 - 航行计划\par
-F4 - 配置/调试\par
-F5 - 刷新所有参数列表\par
-Control-F - 高级页面(Temp screen)\par
-Control-X - sysid选择器\par
-Control-T - 直接连接(Blind connect)\par
+\pard\tab 2.打开\b TCP2COM \b0开始监听端口
 \par
-航行数据\par
-1 - tab 1\par
-2 - tab 2\par
-3 - tab 3\par
-4 - tab 4\par
-5 - tab 5\par
-6 - tab 6\par
-7 - tab 7\par
-8 - tab 8\par
-9 - tab 9\par
-0 - tab 10\par
+\pard\tab 3.打开\b GPRS_linker2Uart \b0，选择COM13,点CONNECT
 \par
-航行计划\par
-Control-Z - 撤销\par
-Control-O - 打开航点文件\par
-Control-S - 保存航点文件\par
-\par
-自动航点网格(grid)\par
-Control-O - 打开网格文件\par
-Control-S - 保存网格文件\par
+\pard\tab 4.使用本软件连接COM14端口，波特率选择57600.即可开始工作
 \par
 捐助支付宝：lvkui@outlook.com \par
 \par
