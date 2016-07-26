@@ -11,6 +11,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using DirectShowLib;
 using GMap.NET;
+using GuardShipSystem.Service;
 
 namespace MissionPlanner
 {
@@ -1683,6 +1684,7 @@ namespace MissionPlanner
                         if (loc.lat == 0 && loc.lon == 0)
                         {
                             useLocation = false;
+                            SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA,,,,,,0,00,99.99,,,,,,");
                         }
                         else
                         {
@@ -1691,7 +1693,7 @@ namespace MissionPlanner
 
                             CurrentPosition.Lat = lat;
                             CurrentPosition.Lng = lng;
-
+//                            SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + loc.time_boot_ms + "," + loc.lon * 1.0e-5 + ",N" + "," + loc.lat * 1.0e-5 + ",E," + 1 + "," +  + ",99.99,,,,,,");
                             altasl = loc.alt/1000.0f;
                         }
                     }
@@ -1708,6 +1710,9 @@ namespace MissionPlanner
 
                             altasl = gps.alt/1000.0f;
                             // alt = gps.alt; // using vfr as includes baro calc
+
+
+                            SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + gps.time_usec + "," + gps.lon * 1.0e-5 + ",N" + "," + gps.lat * 1.0e-5 + ",E," + gps.fix_type + "," + gps.satellites_visible + ",99.99,,,,,,");
                         }
 
                         gpsstatus = gps.fix_type;
@@ -2466,5 +2471,38 @@ namespace MissionPlanner
         public float rpm2 { get; set; }
 
         public MAVLink.MAV_PROTOCOL_CAPABILITY capabilities { get; set; }
+
+//        private void SendGpsToAdcp(UasGpsRawInt uasGpsRawInt)
+//        {
+//            switch (uasGpsRawInt.FixType)
+//            {
+//                case 0:
+//                case 1:
+//                    FixTypeString = "尚未定位";
+//                    GpsAbled = false;
+//                    SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA,,,,,,0,00,99.99,,,,,,");
+//                    break;
+//                case 2:
+//                    FixTypeString = "2D定位";
+//                    SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + uasGpsRawInt.TimeUsec + "," + _uasGpsRawInt.Lon * 1.0e-5 + ",N" + "," + _uasGpsRawInt.Lat * 1.0e-5 + ",E," + _uasGpsRawInt.FixType + "," + _uasGpsRawInt.SatellitesVisible + ",99.99,,,,,,");
+//                    break;
+//                case 3:
+//                    FixTypeString = "3D定位";
+//                    GpsAbled = true;
+//                    SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + uasGpsRawInt.TimeUsec + "," + _uasGpsRawInt.Lon * 1.0e-5 + ",N" + "," + _uasGpsRawInt.Lat * 1.0e-5 + ",E," + _uasGpsRawInt.FixType + "," + _uasGpsRawInt.SatellitesVisible + ",99.99,,,,,,");
+//                    break;
+//                case 4:
+//                    FixTypeString = "DGPS";
+//                    FixTypeString = "3D定位";
+//                    GpsAbled = true;
+//                    SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + uasGpsRawInt.TimeUsec + "," + _uasGpsRawInt.Lon * 1.0e-5 + ",N" + "," + _uasGpsRawInt.Lat * 1.0e-5 + ",E," + _uasGpsRawInt.FixType + "," + _uasGpsRawInt.SatellitesVisible + ",99.99,,,,,,");
+//                    break;
+//                default:
+//                    FixTypeString = "GPS定位成功";
+//                    GpsAbled = true;
+//                    SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + uasGpsRawInt.TimeUsec + "," + _uasGpsRawInt.Lon * 1.0e-5 + ",N" + "," + _uasGpsRawInt.Lat * 1.0e-5 + ",E," + _uasGpsRawInt.FixType + "," + _uasGpsRawInt.SatellitesVisible + ",99.99,,,,,,");
+//                    break;
+//            }
+//        }
     }
 }

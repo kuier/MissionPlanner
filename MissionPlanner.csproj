@@ -826,6 +826,7 @@
       <DependentUpon>ConnectionOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Service\Modbus.cs" />
+    <Compile Include="Service\SerialPortHelper.cs" />
     <Compile Include="Service\WaterColService.cs" />
     <Compile Include="Strings.Designer.cs">
       <AutoGen>True</AutoGen>
