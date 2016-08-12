@@ -149,6 +149,8 @@
 \pard\tab 3.打开\b GPRS_linker2Uart \b0，选择COM13,点CONNECT
 \par
 \pard\tab 4.使用本软件连接COM14端口，波特率选择57600.即可开始工作
+
+\pard\tab 备注：水样采集任务COM10;五参数分析COM11；测距COM12;GPS转发COM15;
 \par
 捐助支付宝：lvkui@outlook.com \par
 \par

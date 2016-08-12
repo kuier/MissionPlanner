@@ -119,6 +119,7 @@
             this.BUT_write = new MissionPlanner.Controls.MyButton();
             this.BUT_read = new MissionPlanner.Controls.MyButton();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.btnWucanshuFenxi = new MissionPlanner.Controls.MyButton();
             this.btnConTest = new MissionPlanner.Controls.MyButton();
             this.btnGetYoseData = new MissionPlanner.Controls.MyButton();
             this.btnUpAndDown = new MissionPlanner.Controls.MyButton();
@@ -145,6 +146,10 @@
             this.ctLabel = new System.Windows.Forms.Label();
             this.turLabel = new System.Windows.Forms.Label();
             this.doLabel = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.DistanceLabel = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.panelMap = new System.Windows.Forms.Panel();
             this.lbl_distance = new System.Windows.Forms.Label();
             this.lbl_homedist = new System.Windows.Forms.Label();
@@ -223,7 +228,7 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnWucanshuFenxi = new MissionPlanner.Controls.MyButton();
+            this.btnStartCeju = new MissionPlanner.Controls.MyButton();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panelWaypoints.SuspendLayout();
             this.panelAction.SuspendLayout();
@@ -238,6 +243,7 @@
             this.panel8.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.panel9.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.panelMap.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -613,6 +619,7 @@
             this.flowLayoutPanel1.Controls.Add(this.panel6);
             this.flowLayoutPanel1.Controls.Add(this.panel8);
             this.flowLayoutPanel1.Controls.Add(this.groupBox1);
+            this.flowLayoutPanel1.Controls.Add(this.groupBox2);
             resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             // 
@@ -777,6 +784,12 @@
             this.panel7.Controls.Add(this.btnUpAndDown);
             resources.ApplyResources(this.panel7, "panel7");
             this.panel7.Name = "panel7";
+            // 
+            // btnWucanshuFenxi
+            // 
+            resources.ApplyResources(this.btnWucanshuFenxi, "btnWucanshuFenxi");
+            this.btnWucanshuFenxi.Name = "btnWucanshuFenxi";
+            this.btnWucanshuFenxi.UseVisualStyleBackColor = true;
             // 
             // btnConTest
             // 
@@ -948,6 +961,31 @@
             // 
             resources.ApplyResources(this.doLabel, "doLabel");
             this.doLabel.Name = "doLabel";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.btnStartCeju);
+            this.groupBox2.Controls.Add(this.DistanceLabel);
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.label9);
+            resources.ApplyResources(this.groupBox2, "groupBox2");
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.TabStop = false;
+            // 
+            // DistanceLabel
+            // 
+            resources.ApplyResources(this.DistanceLabel, "DistanceLabel");
+            this.DistanceLabel.Name = "DistanceLabel";
+            // 
+            // label10
+            // 
+            resources.ApplyResources(this.label10, "label10");
+            this.label10.Name = "label10";
+            // 
+            // label9
+            // 
+            resources.ApplyResources(this.label9, "label9");
+            this.label9.Name = "label9";
             // 
             // panelMap
             // 
@@ -1512,11 +1550,12 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // btnWucanshuFenxi
+            // btnStartCeju
             // 
-            resources.ApplyResources(this.btnWucanshuFenxi, "btnWucanshuFenxi");
-            this.btnWucanshuFenxi.Name = "btnWucanshuFenxi";
-            this.btnWucanshuFenxi.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.btnStartCeju, "btnStartCeju");
+            this.btnStartCeju.Name = "btnStartCeju";
+            this.btnStartCeju.UseVisualStyleBackColor = true;
+            this.btnStartCeju.Click += new System.EventHandler(this.btnStartCeju_Click);
             // 
             // FlightPlanner
             // 
@@ -1549,6 +1588,8 @@
             this.groupBox1.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.panelMap.ResumeLayout(false);
             this.panelMap.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -1726,5 +1767,10 @@
         private Controls.MyLabel labelWucanshuState;
         private System.Windows.Forms.Label label8;
         private Controls.MyButton btnWucanshuFenxi;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label DistanceLabel;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private Controls.MyButton btnStartCeju;
     }
 }

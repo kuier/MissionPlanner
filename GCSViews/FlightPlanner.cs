@@ -17,6 +17,7 @@ using System.Timers;
 using System.Web.Configuration;
 using System.Windows.Forms;
 using System.Xml;
+using CejuNET;
 using DotSpatial.Data;
 using DotSpatial.Projections;
 using GeoUtility.GeoSystem;
@@ -90,12 +91,25 @@ namespace MissionPlanner.GCSViews
             }
         }
 
-        private void SetLabelText(MyLabel l, string text)
+        private void SetMyLabelText(MyLabel l, string text)
         {
             if (l.InvokeRequired)
             {
-                SetLabelTextDelegate setLabelTextDelegate = new SetLabelTextDelegate(SetLabelText);
+                SetLabelTextDelegate setLabelTextDelegate = new SetLabelTextDelegate(SetMyLabelText);
                 this.Invoke(setLabelTextDelegate, new object[] {l, text});
+            }
+            else
+            {
+                l.Text = text;
+            }
+        }
+
+        private void SetLabelText(Label l, string text)
+        {
+            if (l.InvokeRequired)
+            {
+                SetLabelTextDelegate setLabelTextDelegate = new SetLabelTextDelegate(SetMyLabelText);
+                this.Invoke(setLabelTextDelegate, new object[] { l, text });
             }
             else
             {
@@ -653,6 +667,27 @@ namespace MissionPlanner.GCSViews
                 CustomMessageBox.Show("五参数数据端口出错，请检查COM11端口，然后重试", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             #endregion
+
+            #region 超声波测距
+            CejuSerialPortTransport cejuSerialPortTransport = new CejuSerialPortTransport();
+            cejuSerialPortTransport.SerialPortName = "COM12";
+            cejuSerialPortTransport.OnPacketReceived += cejuSerialPortTransport_OnPacketReceived;
+            try
+            {
+                cejuSerialPortTransport.InitializerSerialPort();
+            }
+            catch (Exception exception)
+            {
+                CustomMessageBox.Show("超声测距端口出错，请检查COM12端口，然后重试", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                throw;
+            }
+
+            #endregion
+        }
+
+        void cejuSerialPortTransport_OnPacketReceived(object sender, CejuPacket packet)
+        {
+            SetLabelText(DistanceLabel,packet.Distance.ToString());
         }
 
         void updateCMDParams()
@@ -2182,7 +2217,7 @@ namespace MissionPlanner.GCSViews
                 {
                     try
                     {
-                        var homeans = port.setWP(home, (ushort)a, MAVLink.MAV_FRAME.GLOBAL, 0, 1, use_int);
+                        var homeans = port.setWP(home, (ushort)a, MAVLink.MAV_FRAME.GLOBAL, 0, 0, use_int);
                         if (homeans != MAVLink.MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED)
                         {
                             CustomMessageBox.Show(Strings.ErrorRejectedByMAV, Strings.ERROR);
@@ -2195,7 +2230,7 @@ namespace MissionPlanner.GCSViews
                         use_int = false;
                         // added here to prevent timeout errors
                         port.setWPTotal(totalwpcountforupload);
-                        var homeans = port.setWP(home, (ushort)a, MAVLink.MAV_FRAME.GLOBAL, 0, 1, use_int);
+                        var homeans = port.setWP(home, (ushort)a, MAVLink.MAV_FRAME.GLOBAL, 0, 0, use_int);
                         if (homeans != MAVLink.MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED)
                         {
                             CustomMessageBox.Show(Strings.ErrorRejectedByMAV, Strings.ERROR);
@@ -6691,7 +6726,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             {
                 if (waterColModbus.SendQuShuiMessage(samplingNum, 2500, ref quShuiState))
                 {
-                    SetTbStateText("发送取水命令，正在取水");
+                    SetTbStateText("发送取水查询命令，正在取水");
                     SetButtonText(btnQuShui,"正在取水");
                     CancellationTokenSource cts = new CancellationTokenSource();
                     ThreadPool.QueueUserWorkItem((a) =>
@@ -6706,7 +6741,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         if (GetQushuiState(waterColModbus, ref qushuiBytes))
                         {
                             isQushui = true;
-                            SetTbStateText("发送取水命令，正在取水");
+                            SetTbStateText("发送取水查询命令，正在取水");
                             SetButtonText(btnQuShui,"正在取水");
                             CancellationTokenSource cts = new CancellationTokenSource();
                             ThreadPool.QueueUserWorkItem((a) =>
@@ -7113,7 +7148,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
                         if (GetShuanTongState(waterColModbus, ref returnBytes))
                         {
-                            SetTbStateText("发送涮桶命令，正在涮桶");
+                            SetTbStateText("发送涮桶查询命令，正在涮桶");
                             SetButtonText(btnShuanTong,"正在涮桶");
                             isShuantong = true;
                             CancellationTokenSource cts = new CancellationTokenSource();
@@ -7178,7 +7213,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         cts.Cancel();
                         if (cts.Token.IsCancellationRequested)
                         {
-                            SetTbStateText("发送涮桶命令，涮桶完成");
+                            SetTbStateText("发送涮桶查询命令，涮桶完成");
                             SetButtonText(btnShuanTong,"涮桶");
                         }
                     }
@@ -7222,6 +7257,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private short[] _phvalues = new short[2];
         private short[] _tempvalues = new short[2];
         #endregion
+
         #region 获取五参数数据
         public float GetDoValue()
         {
@@ -7289,7 +7325,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 _wucanshuTimer.Elapsed -= _wucanshuTimer_Elapsed;
                 _wucanshuTimer.Stop();
                 _isWucanshuRunning = false;
-                SetLabelText(labelWucanshuState, "五参数状态");
+                SetMyLabelText(labelWucanshuState, "五参数状态");
 
                 SetButtonText(btnGetYoseData, "获取五参数");
 
@@ -7310,18 +7346,18 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             switch (_wucanshuTimeFlag)
             {
                 case 0:
-                    SetLabelText(labelWucanshuState,"正在获取溶解氧");
+                    SetMyLabelText(labelWucanshuState,"正在获取溶解氧");
                     _wucanshuTimeFlag++;
                     tempValue = GetDoValue();
                     if (Math.Abs(tempValue-0.0)>=0.01)
                     {
 //                        CurrentState.DoValue = tempValue;
-                        SetLabelText(doLabelValue,tempValue.ToString());
+                        SetMyLabelText(doLabelValue,tempValue.ToString());
                         wucanshuDataModel.DoValue = tempValue;
                     }
                     break;
                 case 1:
-                    SetLabelText(labelWucanshuState, "正在获取浊度");
+                    SetMyLabelText(labelWucanshuState, "正在获取浊度");
                     _wucanshuTimeFlag++;
                     wucanshuState.TurValue = _wucanshuTimeFlag;
                     tempValue = GetTurValue();
@@ -7329,11 +7365,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
 //                        CurrentState.TurValue = tempValue;
                         wucanshuDataModel.TurValue = tempValue;
-                        SetLabelText(turLabelValue,tempValue.ToString());
+                        SetMyLabelText(turLabelValue,tempValue.ToString());
                     }
                     break;
                 case 2:
-                    SetLabelText(labelWucanshuState, "正在获取电导");
+                    SetMyLabelText(labelWucanshuState, "正在获取电导");
 
                     _wucanshuTimeFlag++;
                     tempValue = GetCtValue();
@@ -7341,11 +7377,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
 //                        CurrentState.CtValue = tempValue;
                         wucanshuDataModel.CtValue = tempValue;
-                        SetLabelText(ctLabelValue,tempValue.ToString());
+                        SetMyLabelText(ctLabelValue,tempValue.ToString());
                     }
                     break;
                 case 3:
-                    SetLabelText(labelWucanshuState, "正在获取PH");
+                    SetMyLabelText(labelWucanshuState, "正在获取PH");
 
                     _wucanshuTimeFlag++;
                     tempValue = GetPhValue();
@@ -7353,11 +7389,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
 //                        CurrentState.PHValue = tempValue;
                         wucanshuDataModel.PhValue = tempValue;
-                        SetLabelText(phLabelValue,tempValue.ToString());
+                        SetMyLabelText(phLabelValue,tempValue.ToString());
                     }
                     break;
                 case 4:
-                    SetLabelText(labelWucanshuState, "正在获取温度");
+                    SetMyLabelText(labelWucanshuState, "正在获取温度");
 
                     _wucanshuTimeFlag++;
                     tempValue = GetTempValue();
@@ -7365,7 +7401,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
 //                        CurrentState.TempValue = tempValue;
                         wucanshuDataModel.TempValue = tempValue;
-                        SetLabelText(tempLabelValue,tempValue.ToString());
+                        SetMyLabelText(tempLabelValue,tempValue.ToString());
                     }
                     break;
                 default:
@@ -7377,6 +7413,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     }
                     break;
             }
+        }
+
+        private void btnStartCeju_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

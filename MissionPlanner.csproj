@@ -825,6 +825,13 @@
     <Compile Include="ConnectionOptions.Designer.cs">
       <DependentUpon>ConnectionOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Service\CejuNET\BlockingCircularStream.cs" />
+    <Compile Include="Service\CejuNET\CejuAsyncWalker.cs" />
+    <Compile Include="Service\CejuNET\CejuGenericPacketWalker.cs" />
+    <Compile Include="Service\CejuNET\CejuGenericTransport.cs" />
+    <Compile Include="Service\CejuNET\CejuPacket.cs" />
+    <Compile Include="Service\CejuNET\CejuSerialPortTransport.cs" />
+    <Compile Include="Service\CejuNET\UasMessage.cs" />
     <Compile Include="Service\Modbus.cs" />
     <Compile Include="Service\SerialPortHelper.cs" />
     <Compile Include="Service\WaterColService.cs" />
@@ -2794,7 +2801,9 @@
     <EmbeddedResource Include="OpenGLtest2.resx">
       <DependentUpon>OpenGLtest2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.zh-Hans.resx" />
+    <EmbeddedResource Include="Properties\Resources.zh-Hans.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Radio\Sikradio.it-IT.resx">
       <DependentUpon>Sikradio.cs</DependentUpon>
     </EmbeddedResource>
