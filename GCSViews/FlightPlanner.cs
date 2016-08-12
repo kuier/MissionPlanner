@@ -63,8 +63,9 @@ namespace MissionPlanner.GCSViews
 
         private delegate void SetButtonTextDelegate(Button b, string text);
 
-        private delegate void SetLabelTextDelegate(MyLabel l, string text);
+        private delegate void SetMyLabelTextDelegate(MyLabel l, string text);
 
+        private delegate void SetLabelTextDelegate(Label l, string text);
         private void SetTbStateText(string text)
         {
             if (this.tbState.InvokeRequired)
@@ -95,8 +96,8 @@ namespace MissionPlanner.GCSViews
         {
             if (l.InvokeRequired)
             {
-                SetLabelTextDelegate setLabelTextDelegate = new SetLabelTextDelegate(SetMyLabelText);
-                this.Invoke(setLabelTextDelegate, new object[] {l, text});
+                SetMyLabelTextDelegate setMyLabelTextDelegate = new SetMyLabelTextDelegate(SetMyLabelText);
+                this.Invoke(setMyLabelTextDelegate, new object[] {l, text});
             }
             else
             {
@@ -108,8 +109,8 @@ namespace MissionPlanner.GCSViews
         {
             if (l.InvokeRequired)
             {
-                SetLabelTextDelegate setLabelTextDelegate = new SetLabelTextDelegate(SetMyLabelText);
-                this.Invoke(setLabelTextDelegate, new object[] { l, text });
+                SetLabelTextDelegate setMyLabelTextDelegate = new SetLabelTextDelegate(SetLabelText);
+                this.Invoke(setMyLabelTextDelegate, new object[] { l, text });
             }
             else
             {
@@ -119,6 +120,9 @@ namespace MissionPlanner.GCSViews
 
         protected WucanshuState wucanshuState = new WucanshuState();
         #endregion
+
+        private CejuSerialPortTransport cejuSerialPortTransport;
+
 
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         int selectedrow;
@@ -669,7 +673,7 @@ namespace MissionPlanner.GCSViews
             #endregion
 
             #region 超声波测距
-            CejuSerialPortTransport cejuSerialPortTransport = new CejuSerialPortTransport();
+            cejuSerialPortTransport = new CejuSerialPortTransport();
             cejuSerialPortTransport.SerialPortName = "COM12";
             cejuSerialPortTransport.OnPacketReceived += cejuSerialPortTransport_OnPacketReceived;
             try
@@ -7417,7 +7421,32 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
         private void btnStartCeju_Click(object sender, EventArgs e)
         {
-
+            if (btnStartCeju.Text == "开启")
+            {
+                try
+                {
+                    cejuSerialPortTransport.SendStartCommand();
+                    SetButtonText(btnStartCeju,"关闭");
+                }
+                catch (Exception exception)
+                {
+                    CustomMessageBox.Show("测距端口出错，检查COM12端口，然后重试"+exception.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            else
+            {
+                try
+                {
+                    cejuSerialPortTransport.SendStopCommand();
+                    SetButtonText(btnStartCeju, "开启");
+                }
+                catch (Exception exception)
+                {
+                    CustomMessageBox.Show("测距端口出错，检查COM12端口，然后重试" + exception.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
         }
 
     }
