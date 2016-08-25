@@ -682,8 +682,7 @@ namespace MissionPlanner.GCSViews
             }
             catch (Exception exception)
             {
-                CustomMessageBox.Show("超声测距端口出错，请检查COM12端口，然后重试", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                throw;
+                CustomMessageBox.Show("超声测距端口出错，请检查COM12端口，然后重试"+exception.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             #endregion
@@ -7419,14 +7418,27 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
         }
 
+        private static CancellationTokenSource cancellationTokenSource;
         private void btnStartCeju_Click(object sender, EventArgs e)
         {
             if (btnStartCeju.Text == "开启")
             {
+                cancellationTokenSource = new CancellationTokenSource();
                 try
                 {
-                    cejuSerialPortTransport.SendStartCommand();
-                    SetButtonText(btnStartCeju,"关闭");
+//                    cejuSerialPortTransport.SendStartCommand();
+//                    SetButtonText(btnStartCeju,"关闭");
+                    Thread thread = new Thread(new ThreadStart(() =>
+                    {
+                        while (!cancellationTokenSource.IsCancellationRequested)
+                        {
+                            cejuSerialPortTransport.SendStartCommand2();
+                            Thread.Sleep(2000);
+                        }
+                        Console.WriteLine("好，执行完成了");
+                    }));
+                    thread.Start();
+                    SetButtonText(btnStartCeju, "关闭");
                 }
                 catch (Exception exception)
                 {
@@ -7438,6 +7450,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             {
                 try
                 {
+                    cancellationTokenSource.Cancel();
                     cejuSerialPortTransport.SendStopCommand();
                     SetButtonText(btnStartCeju, "开启");
                 }
@@ -7447,6 +7460,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     return;
                 }
             }
+        }
+
+        private void btnWucanshuFenxi_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

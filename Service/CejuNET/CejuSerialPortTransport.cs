@@ -177,6 +177,20 @@ namespace CejuNET
             }
         }
 
+        public bool SendStartCommand2()
+        {
+            byte[] bytes = new byte[1] { 0xb2 };
+            try
+            {
+                mSerialPort.Write(bytes, 0, 1);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public bool SendStopCommand()
         {
             byte[] bytes = new byte[1] { 0x00 };

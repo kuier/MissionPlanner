@@ -117,39 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="help_text" xml:space="preserve">
-    <value>{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang3081\deflangfe3081{\fonttbl{\f0\fmodern\fprq6\fcharset134 Microsoft YaHei;}}
-{\colortbl ;\red231\green230\blue230;\red0\green0\blue255;}
-{\*\generator Riched20 10.0.14257}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind5\uc1\viewbksp1{\*\background 
-{\shp{\*\shpinst{\sp{\sn fillType}{\sv 0}}
-{\sp{\sn fillColor}{\sv 2565927}}
-{\sp{\sn fillBackColor}{\sv 0}}
-{\sp{\sn fillFocus}{\sv 0}}
-{\sp{\sn fillBlip}{\sv {\pict{\*\picprop}\wmetafile0 
-}}}}}}
-
-\pard\nowidctlpar\sa200\sl276\slmult1\cf1\f0\fs22\par
-\tab 欢迎使用\b Mission Planner\b0 ，本软件可以为无人船(\b UAV\b0 )规划任务。\par
-\tab 快速入门：\par
-\tab\tab\tab\b 航行数据 \endash  \b0 带有位置和姿态的简单航行屏幕。\par
-\b\tab\tab\tab 航行计划 \endash  \b0 计划你的航行和其它脚本任务。\par
-\b\tab\tab\tab 初始设置 \endash  \b0 升级APM固件、设置与初次调试各个功能等。\par
-\b\tab\tab\tab 配置/调试 \endash  \b0 自定义PID和其它关键设置，包括启用和禁用硬件。\par
-
-\pard\nowidctlpar\b\tab 主开发者:\b0  Michael Oborne\par
-\par
-\tab\b 帮助:\b0 请联系山东盈渡电子\par
-\tab\b 工作流程：\b0\par
-\tab 1.使用无线网卡连接到网络，使用管理员权限打开\b NAT123 \b0，修改\b其他列表\b0分组里的工业笔记本电脑内网IP为本机IP\par
-\tab 2.打开\b TCP2COM \b0开始监听端口\par
-\tab 3.使用本软件连接电台端口，波特率选择57600.即可开始工作\par
-\tab 备注：水样采集任务COM10;五参数分析COM11；测距COM12;GPS转发COM15,ADCP中选择COM16;
-\par
-\par
-Q：地图怎么加载不出来？\par
-A：请在航行计划的右侧修改地图为必应、高德或其它中国大陆地区可以访问的地图。谷歌中国系列也已被墙。\par
-Q：各个航行模式是什么意思？\par
-A：0:Stabilize自稳,1:Acro特技,2:AltHold定高,3:Auto自动,4:Guided引导,5:Loiter留待,6:RTL返航,7:Circle绕圈,9:Land降落,11:Drift飘移,13:Sport运动,14:Flip翻转,15:AutoTune自动调参,16:PosHold定点,17:Brake暂停\par
-}</value>
-  </data>
 </root>

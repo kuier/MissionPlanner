@@ -147,6 +147,7 @@
             this.turLabel = new System.Windows.Forms.Label();
             this.doLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnStartCeju = new MissionPlanner.Controls.MyButton();
             this.DistanceLabel = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -228,7 +229,6 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnStartCeju = new MissionPlanner.Controls.MyButton();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panelWaypoints.SuspendLayout();
             this.panelAction.SuspendLayout();
@@ -790,6 +790,7 @@
             resources.ApplyResources(this.btnWucanshuFenxi, "btnWucanshuFenxi");
             this.btnWucanshuFenxi.Name = "btnWucanshuFenxi";
             this.btnWucanshuFenxi.UseVisualStyleBackColor = true;
+            this.btnWucanshuFenxi.Click += new System.EventHandler(this.btnWucanshuFenxi_Click);
             // 
             // btnConTest
             // 
@@ -971,6 +972,13 @@
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // btnStartCeju
+            // 
+            resources.ApplyResources(this.btnStartCeju, "btnStartCeju");
+            this.btnStartCeju.Name = "btnStartCeju";
+            this.btnStartCeju.UseVisualStyleBackColor = true;
+            this.btnStartCeju.Click += new System.EventHandler(this.btnStartCeju_Click);
             // 
             // DistanceLabel
             // 
@@ -1549,13 +1557,6 @@
             // 
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // btnStartCeju
-            // 
-            resources.ApplyResources(this.btnStartCeju, "btnStartCeju");
-            this.btnStartCeju.Name = "btnStartCeju";
-            this.btnStartCeju.UseVisualStyleBackColor = true;
-            this.btnStartCeju.Click += new System.EventHandler(this.btnStartCeju_Click);
             // 
             // FlightPlanner
             // 
