@@ -116,6 +116,8 @@
             this.TXT_homelng = new System.Windows.Forms.TextBox();
             this.TXT_homelat = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.tbNextTask = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.BUT_write = new MissionPlanner.Controls.MyButton();
             this.BUT_read = new MissionPlanner.Controls.MyButton();
             this.panel7 = new System.Windows.Forms.Panel();
@@ -229,6 +231,8 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.label13 = new System.Windows.Forms.Label();
+            this.tbCejuState = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panelWaypoints.SuspendLayout();
             this.panelAction.SuspendLayout();
@@ -757,10 +761,22 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.tbNextTask);
+            this.panel5.Controls.Add(this.label12);
             this.panel5.Controls.Add(this.BUT_write);
             this.panel5.Controls.Add(this.BUT_read);
             resources.ApplyResources(this.panel5, "panel5");
             this.panel5.Name = "panel5";
+            // 
+            // tbNextTask
+            // 
+            resources.ApplyResources(this.tbNextTask, "tbNextTask");
+            this.tbNextTask.Name = "tbNextTask";
+            // 
+            // label12
+            // 
+            resources.ApplyResources(this.label12, "label12");
+            this.label12.Name = "label12";
             // 
             // BUT_write
             // 
@@ -965,6 +981,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.tbCejuState);
+            this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.btnStartCeju);
             this.groupBox2.Controls.Add(this.DistanceLabel);
             this.groupBox2.Controls.Add(this.label10);
@@ -1558,6 +1576,16 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // label13
+            // 
+            resources.ApplyResources(this.label13, "label13");
+            this.label13.Name = "label13";
+            // 
+            // tbCejuState
+            // 
+            resources.ApplyResources(this.tbCejuState, "tbCejuState");
+            this.tbCejuState.Name = "tbCejuState";
+            // 
             // FlightPlanner
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1581,6 +1609,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
@@ -1773,5 +1802,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private Controls.MyButton btnStartCeju;
+        private System.Windows.Forms.TextBox tbNextTask;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox tbCejuState;
+        private System.Windows.Forms.Label label13;
     }
 }

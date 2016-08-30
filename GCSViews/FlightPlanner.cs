@@ -66,6 +66,8 @@ namespace MissionPlanner.GCSViews
         private delegate void SetMyLabelTextDelegate(MyLabel l, string text);
 
         private delegate void SetLabelTextDelegate(Label l, string text);
+
+        private delegate void SetTextBoxTextDelegate(TextBox t, string text);
         private void SetTbStateText(string text)
         {
             if (this.tbState.InvokeRequired)
@@ -115,6 +117,19 @@ namespace MissionPlanner.GCSViews
             else
             {
                 l.Text = text;
+            }
+        }
+
+        private void SetTextBoxText(TextBox t, string text)
+        {
+            if (t.InvokeRequired)
+            {
+                SetTextBoxTextDelegate setTextBoxTextDelegate = new SetTextBoxTextDelegate(SetTextBoxText);
+                this.Invoke(setTextBoxTextDelegate, new object[] {t, text});
+            }
+            else
+            {
+                t.Text = text;
             }
         }
 
@@ -687,10 +702,36 @@ namespace MissionPlanner.GCSViews
 
             #endregion
         }
-
+        //是否小于10米
+        private byte IsLessTenMeter = 0;
+        //是否现在是手动控制
+        private bool IsManualControl = false;
         void cejuSerialPortTransport_OnPacketReceived(object sender, CejuPacket packet)
         {
             SetLabelText(DistanceLabel,packet.Distance.ToString());
+            if (packet.Distance < 10)
+            {
+                //上一次也是10米以内
+                if (IsLessTenMeter == 2)
+                {
+                    //准备发出警告信息
+                    SetTextBoxText(tbCejuState, "前面10米之内测到有障碍物，自动切换至手动模式");
+                    //切换至手动模式
+                    if (MainV2.comPort.MAV.cs.mode.ToLower() != "Manual".ToLower())
+                    {
+                        MainV2.comPort.setMode("Manual");
+                    }
+                }
+                else
+                {
+                    IsLessTenMeter ++;
+                }
+            }
+            else
+            {
+                IsLessTenMeter = 0;
+                SetTextBoxText(tbCejuState, "正在测距......");
+            }
         }
 
         void updateCMDParams()
@@ -1995,6 +2036,7 @@ namespace MissionPlanner.GCSViews
             }
         }
 
+        private byte isContinueTask;
         /// <summary>
         /// Writes the mission from the datagrid and values to the EEPROM
         /// </summary>
@@ -2002,6 +2044,19 @@ namespace MissionPlanner.GCSViews
         /// <param name="e"></param>
         public void BUT_write_Click(object sender, EventArgs e)
         {
+            if (tbNextTask.Text != "0" || tbNextTask.Text != "1")
+            {
+                CustomMessageBox.Show("继续任务只能为0或1。1代表继续下一个任务点，0为不继续");
+                return;
+            }
+            if (tbNextTask.Text == "0")
+            {
+                isContinueTask = 0;
+            }
+            else
+            {
+                isContinueTask = 1;
+            }
             if ((altmode)CMB_altmode.SelectedValue == altmode.Absolute)
             {
                 if (DialogResult.No ==
@@ -2281,7 +2336,7 @@ namespace MissionPlanner.GCSViews
                     }
 
                     // try send the wp，自动继续任务设为false
-                    MAVLink.MAV_MISSION_RESULT ans = port.setWP(temp, (ushort)(a), frame, 0, 0, use_int);
+                    MAVLink.MAV_MISSION_RESULT ans = port.setWP(temp, (ushort)(a), frame, 0, isContinueTask, use_int);
 
                     // we timed out while uploading wps/ command wasnt replaced/ command wasnt added
                     if (ans == MAVLink.MAV_MISSION_RESULT.MAV_MISSION_ERROR)
@@ -2289,7 +2344,7 @@ namespace MissionPlanner.GCSViews
                         // resend for partial upload
                         port.setWPPartialUpdate((ushort)(a), totalwpcountforupload);
                         // reupload this point.
-                        ans = port.setWP(temp, (ushort)(a), frame, 0, 0, use_int);
+                        ans = port.setWP(temp, (ushort)(a), frame, 0, isContinueTask, use_int);
                     }
 
                     if (ans == MAVLink.MAV_MISSION_RESULT.MAV_MISSION_NO_SPACE)
