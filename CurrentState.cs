@@ -17,6 +17,11 @@ namespace MissionPlanner
 {
     public class CurrentState : ICloneable
     {
+
+        public delegate void SendQuShuiCommand(int num);
+
+        public static SendQuShuiCommand sendQuShuiCommand; 
+
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public event EventHandler csCallBack;
@@ -1693,7 +1698,7 @@ namespace MissionPlanner
 
                             CurrentPosition.Lat = lat;
                             CurrentPosition.Lng = lng;
-//                            SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + loc.time_boot_ms + "," + loc.lon * 1.0e-5 + ",N" + "," + loc.lat * 1.0e-5 + ",E," + 1 + "," +  + ",99.99,,,,,,");
+                            SerialPortHelper.SerialPortHelperInstance.SendGpsData("GPGGA," + loc.time_boot_ms + "," + loc.lon * 1.0e-5 + ",N" + "," + loc.lat * 1.0e-5 + ",E," + 1 + "," + "07"+ ",99.99,,,,,,");
                             altasl = loc.alt/1000.0f;
                         }
                     }
@@ -1813,6 +1818,22 @@ namespace MissionPlanner
                         nav_bearing = nav.nav_bearing;
                         target_bearing = nav.target_bearing;
                         wp_dist = nav.wp_dist;
+                        //如果船的距离小于目标点30米
+                        SerialPortHelper.SerialPortHelperInstance.SendAudoJuliData("------"+wp_dist+"---"+wpno);
+                        if (Math.Abs(wp_dist - 30) < 0.1)
+                        {
+                            if (sendQuShuiCommand !=null)
+                            {
+                                try
+                                {
+                                    sendQuShuiCommand((int)wpno);
+                                }
+                                catch (Exception)
+                                {
+                                    
+                                }
+                            }
+                        }
                         alt_error = nav.alt_error;
                         aspd_error = nav.aspd_error/100.0f;
                         xtrack_error = nav.xtrack_error;

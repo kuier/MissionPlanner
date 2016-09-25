@@ -1325,6 +1325,30 @@
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <data name="btnAutoQushui.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 103</value>
+  </data>
+  <data name="btnAutoQushui.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 23</value>
+  </data>
+  <data name="btnAutoQushui.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="btnAutoQushui.Text" xml:space="preserve">
+    <value>自动取水</value>
+  </data>
+  <data name="&gt;&gt;btnAutoQushui.Name" xml:space="preserve">
+    <value>btnAutoQushui</value>
+  </data>
+  <data name="&gt;&gt;btnAutoQushui.Type" xml:space="preserve">
+    <value>MissionPlanner.Controls.MyButton, MissionPlanner.Controls, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+  </data>
+  <data name="&gt;&gt;btnAutoQushui.Parent" xml:space="preserve">
+    <value>panel5</value>
+  </data>
+  <data name="&gt;&gt;btnAutoQushui.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="tbNextTask.Location" type="System.Drawing.Point, System.Drawing">
     <value>68, 11</value>
   </data>
@@ -1347,7 +1371,7 @@
     <value>panel5</value>
   </data>
   <data name="&gt;&gt;tbNextTask.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="label12.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1377,7 +1401,7 @@
     <value>panel5</value>
   </data>
   <data name="&gt;&gt;label12.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="BUT_write.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1404,7 +1428,7 @@
     <value>panel5</value>
   </data>
   <data name="&gt;&gt;BUT_write.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="BUT_read.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1431,13 +1455,13 @@
     <value>panel5</value>
   </data>
   <data name="&gt;&gt;BUT_read.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="panel5.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 102</value>
   </data>
   <data name="panel5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 100</value>
+    <value>131, 129</value>
   </data>
   <data name="panel5.TabIndex" type="System.Int32, mscorlib">
     <value>29</value>

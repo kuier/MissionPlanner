@@ -149,6 +149,8 @@
             this.turLabel = new System.Windows.Forms.Label();
             this.doLabel = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tbCejuState = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.btnStartCeju = new MissionPlanner.Controls.MyButton();
             this.DistanceLabel = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -231,8 +233,7 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label13 = new System.Windows.Forms.Label();
-            this.tbCejuState = new System.Windows.Forms.TextBox();
+            this.btnAutoQushui = new MissionPlanner.Controls.MyButton();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panelWaypoints.SuspendLayout();
             this.panelAction.SuspendLayout();
@@ -761,6 +762,7 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.btnAutoQushui);
             this.panel5.Controls.Add(this.tbNextTask);
             this.panel5.Controls.Add(this.label12);
             this.panel5.Controls.Add(this.BUT_write);
@@ -990,6 +992,16 @@
             resources.ApplyResources(this.groupBox2, "groupBox2");
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.TabStop = false;
+            // 
+            // tbCejuState
+            // 
+            resources.ApplyResources(this.tbCejuState, "tbCejuState");
+            this.tbCejuState.Name = "tbCejuState";
+            // 
+            // label13
+            // 
+            resources.ApplyResources(this.label13, "label13");
+            this.label13.Name = "label13";
             // 
             // btnStartCeju
             // 
@@ -1576,15 +1588,12 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // label13
+            // btnAutoQushui
             // 
-            resources.ApplyResources(this.label13, "label13");
-            this.label13.Name = "label13";
-            // 
-            // tbCejuState
-            // 
-            resources.ApplyResources(this.tbCejuState, "tbCejuState");
-            this.tbCejuState.Name = "tbCejuState";
+            resources.ApplyResources(this.btnAutoQushui, "btnAutoQushui");
+            this.btnAutoQushui.Name = "btnAutoQushui";
+            this.btnAutoQushui.UseVisualStyleBackColor = true;
+            this.btnAutoQushui.Click += new System.EventHandler(this.btnAutoQushui_Click);
             // 
             // FlightPlanner
             // 
@@ -1806,5 +1815,6 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox tbCejuState;
         private System.Windows.Forms.Label label13;
+        private Controls.MyButton btnAutoQushui;
     }
 }

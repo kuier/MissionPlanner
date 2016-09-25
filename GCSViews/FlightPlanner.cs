@@ -2044,7 +2044,7 @@ namespace MissionPlanner.GCSViews
         /// <param name="e"></param>
         public void BUT_write_Click(object sender, EventArgs e)
         {
-            if (tbNextTask.Text != "0" || tbNextTask.Text != "1")
+            if (tbNextTask.Text != "0" && tbNextTask.Text != "1")
             {
                 CustomMessageBox.Show("继续任务只能为0或1。1代表继续下一个任务点，0为不继续");
                 return;
@@ -6722,6 +6722,46 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         }
         #endregion
 
+        static bool IsWorking = false;
+
+        //仅仅发布取水命令
+        private void SendQushuiCommandOnly(int num)
+        {
+            //当前如果正在取水的话就直接返回
+//          SendChouShuiCommand((byte)(num % 8));
+            if (waterColModbus.SendQuShuiMessage((byte) (num%8), 2500, ref quShuiState))
+            {
+                   
+            }
+        }
+        private void SendQushuiCommand(int num)
+        {
+            if (isQushui)
+            {
+                return;
+            }
+            if (btnQuShui.Text == "取水")
+            {
+                try
+                {
+                    //byte samplingNum = Convert.ToByte(tbSamplingNum.Text);
+                    if (num%8 < 1 || num%8 > 8)
+                    {
+                        CustomMessageBox.Show("输入桶号不正确，必须为1-8", "异常", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                        tbSamplingNum.Text = 1.ToString();
+                        return;
+                    }
+                    SendChouShuiCommand((byte) (num % 8));
+                }
+                catch (Exception exception)
+                {
+                    CustomMessageBox.Show("输入桶号不正确，必须为1-8" + exception.Message, "异常", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    //throw;
+                }
+            }
+        }
         private void btnQuShui_Click(object sender, EventArgs e)
         {
             if (btnQuShui.Text == "取水")
@@ -6749,6 +6789,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         #region 抽水
 
         private bool isQushui = false;
+        short quShuiState = 0;
         public void SendChouShuiCommand(byte samplingNum)
         {
 //            SetTbStateText("发送通信查询，查询通信状态");
@@ -6775,7 +6816,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             {
                 return;
             }
-            short quShuiState = 0;
+
             byte[] qushuiBytes = new byte[4];
             SetButtonText(btnQuShui, "正在取水");
             SetTbStateText("发送取水命令，正在取水");
@@ -6784,6 +6825,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             {
                 if (waterColModbus.SendQuShuiMessage(samplingNum, 2500, ref quShuiState))
                 {
+                    IsWorking = true;
                     SetTbStateText("发送取水查询命令，正在取水");
                     SetButtonText(btnQuShui,"正在取水");
                     CancellationTokenSource cts = new CancellationTokenSource();
@@ -6815,6 +6857,8 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     }
                     if (!isQushui)
                     {
+
+                        IsWorking = false;
                         CustomMessageBox.Show("取水未成功", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         SetTbStateText("取水未成功");
                         SetButtonText(btnQuShui,"取水");
@@ -6824,6 +6868,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             catch (Exception exception)
             {
+                IsWorking = false;
                 CustomMessageBox.Show(exception.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 SetTbStateText("取水未成功");
                 SetButtonText(btnQuShui,"取水");
@@ -6868,6 +6913,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         {
                             SetButtonText(btnQuShui,"取水");
                             SetTbStateText("取水完成");
+                            IsWorking = false;
                         }
                     }
                     else
@@ -6882,6 +6928,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     count ++;
                     if (count.Equals(5))
                     {
+                        isQuShuiing = false;
                         SetTbStateText("发送取水查询命令，未收到返回数据,请重新取水");
                         SetButtonText(btnQuShui,"取水");
                         break;
@@ -7520,6 +7567,23 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private void btnWucanshuFenxi_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private bool autoQushui = false;
+        private void btnAutoQushui_Click(object sender, EventArgs e)
+        {
+            if (autoQushui == false)
+            {
+                autoQushui = true;
+                btnAutoQushui.Text = "关闭自动取水";
+                CurrentState.sendQuShuiCommand = SendQushuiCommand;
+            }
+            else
+            {
+                autoQushui = false;
+                btnAutoQushui.Text = "自动取水";
+                CurrentState.sendQuShuiCommand = null;
+            }
         }
 
     }

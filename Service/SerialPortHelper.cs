@@ -58,5 +58,17 @@ namespace GuardShipSystem.Service
 //            Console.WriteLine(checksum.ToString("X2"));
             return checksum.ToString("X2");
         }
+
+        public void SendAudoJuliData(String data)
+        {
+            try
+            {
+                _serialPort.Write(data);
+            }
+            catch (Exception)
+            {
+                
+            }
+        }
     }
 }
