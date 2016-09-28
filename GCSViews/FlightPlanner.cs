@@ -59,7 +59,7 @@ namespace MissionPlanner.GCSViews
         WucanshuDataModel wucanshuDataModel = new WucanshuDataModel();
 
         //设置tbState委托
-        delegate void SetTbStateTextDelegate(string text);
+        delegate void SetTextDelegate(string text);
 
         private delegate void SetButtonTextDelegate(Button b, string text);
 
@@ -72,8 +72,8 @@ namespace MissionPlanner.GCSViews
         {
             if (this.tbState.InvokeRequired)
             {
-                SetTbStateTextDelegate sttd = new SetTbStateTextDelegate(SetTbStateText);
-                this.Invoke(sttd, new object[] {text});
+                SetTextDelegate sttd = new SetTextDelegate(SetTbStateText);
+                this.tbState.BeginInvoke(sttd, new object[] {text});
             }
             else
             {
@@ -81,12 +81,25 @@ namespace MissionPlanner.GCSViews
             }
         }
 
+        private void SetQushuiButtonText(string text)
+        {
+            if (this.btnQuShui.InvokeRequired)
+            {
+                SetTextDelegate setTextDelegate = new SetTextDelegate(SetQushuiButtonText);
+                btnQuShui.BeginInvoke(setTextDelegate, new object[] { text });
+            }
+            else
+            {
+                this.btnQuShui.Text = text;
+            }
+        }
+
         private void SetButtonText(Button b, string text)
         {
-            if (b.InvokeRequired)
+            if (this.InvokeRequired)
             {
                 SetButtonTextDelegate setButtonTextDelegate = new SetButtonTextDelegate(SetButtonText);
-                this.Invoke(setButtonTextDelegate, new object[] {b, text});
+                b.BeginInvoke(setButtonTextDelegate, new object[] { b, text });
             }
             else
             {
@@ -99,7 +112,7 @@ namespace MissionPlanner.GCSViews
             if (l.InvokeRequired)
             {
                 SetMyLabelTextDelegate setMyLabelTextDelegate = new SetMyLabelTextDelegate(SetMyLabelText);
-                this.Invoke(setMyLabelTextDelegate, new object[] {l, text});
+                l.BeginInvoke(setMyLabelTextDelegate, new object[] { l, text });
             }
             else
             {
@@ -112,7 +125,7 @@ namespace MissionPlanner.GCSViews
             if (l.InvokeRequired)
             {
                 SetLabelTextDelegate setMyLabelTextDelegate = new SetLabelTextDelegate(SetLabelText);
-                this.Invoke(setMyLabelTextDelegate, new object[] { l, text });
+                l.BeginInvoke(setMyLabelTextDelegate, new object[] { l, text });
             }
             else
             {
@@ -125,7 +138,7 @@ namespace MissionPlanner.GCSViews
             if (t.InvokeRequired)
             {
                 SetTextBoxTextDelegate setTextBoxTextDelegate = new SetTextBoxTextDelegate(SetTextBoxText);
-                this.Invoke(setTextBoxTextDelegate, new object[] {t, text});
+                t.BeginInvoke(setTextBoxTextDelegate, new object[] { t, text });
             }
             else
             {
@@ -6734,11 +6747,17 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                    
             }
         }
-        private void SendQushuiCommand(int num)
+        public void SendQushuiCommand(int num)
         {
             if (isQushui)
             {
                 return;
+            }
+            //如果是自动模式的话才需要降低油门取水
+            if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+            {
+                MainV2.comPort.setParam("CRUISE_THROTTLE", 20);
+                //
             }
             if (btnQuShui.Text == "取水")
             {
@@ -6818,8 +6837,9 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
 
             byte[] qushuiBytes = new byte[4];
-            SetButtonText(btnQuShui, "正在取水");
             SetTbStateText("发送取水命令，正在取水");
+            SetQushuiButtonText("正在取水");
+//            SetButtonText(btnQuShui, "正在取水");
             //ushort sampling = ushort.Parse((taksTaskPointInfoModel.Sampling).ToString("X4"), NumberStyles.HexNumber);
             try
             {
@@ -6862,6 +6882,12 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         CustomMessageBox.Show("取水未成功", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         SetTbStateText("取水未成功");
                         SetButtonText(btnQuShui,"取水");
+                        //把油门恢复到以前的设置
+                        if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+                        {
+                            MainV2.comPort.setParam("CRUISE_THROTTLE", throttle);
+                            //
+                        }
                     }
                     //                    WaterColServiceState = _waterColModbus.modbusStatus+"请稍后重试";
                 }
@@ -6872,6 +6898,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 CustomMessageBox.Show(exception.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 SetTbStateText("取水未成功");
                 SetButtonText(btnQuShui,"取水");
+                if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+                {
+                    MainV2.comPort.setParam("CRUISE_THROTTLE", throttle);
+                    //
+                }
             }
 
         }
@@ -6913,6 +6944,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         {
                             SetButtonText(btnQuShui,"取水");
                             SetTbStateText("取水完成");
+                            if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+                            {
+                                MainV2.comPort.setParam("CRUISE_THROTTLE", throttle);
+                                //
+                            }
                             IsWorking = false;
                         }
                     }
@@ -6924,7 +6960,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 }
                 else
                 {
-                    SetTbStateText("发送取水查询命令，未收到返回数据，等待第"+count+"次重试");
+                    SetTbStateText("发送取水查询命令，未收到返回数据，等待第"+(count+1)+"次重试");
                     count ++;
                     if (count.Equals(5))
                     {
@@ -7568,15 +7604,33 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         {
 
         }
-
+        /// <summary>
+        /// 原先设置的油门到电机的值
+        /// </summary>
+        static float throttle;
         private bool autoQushui = false;
         private void btnAutoQushui_Click(object sender, EventArgs e)
         {
+            if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+            {
+                CustomMessageBox.Show("请先开启自动模式", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            try
+            {
+                throttle = (float)MainV2.comPort.MAV.param["CRUISE_THROTTLE"];
+            }
+            catch (Exception exception)
+            {
+                CustomMessageBox.Show(exception.Message);
+                throw;
+            }
             if (autoQushui == false)
             {
                 autoQushui = true;
                 btnAutoQushui.Text = "关闭自动取水";
                 CurrentState.sendQuShuiCommand = SendQushuiCommand;
+//                CurrentState.sendQuShuiCommand = SendQushuiCommandOnly;
             }
             else
             {
@@ -7584,7 +7638,19 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 btnAutoQushui.Text = "自动取水";
                 CurrentState.sendQuShuiCommand = null;
             }
+
         }
 
+        private void myButton1_Click(object sender, EventArgs e)
+        {
+            float throttlevalue = (float) MainV2.comPort.MAV.param["CRUISE_THROTTLE"];
+            MessageBox.Show(throttlevalue.ToString());
+        }
+
+        private void btn_CRUISE_THROTTLE_Click_1(object sender, EventArgs e)
+        {
+            throttle += 10;
+            MainV2.comPort.setParam("CRUISE_THROTTLE", throttle);
+        }
     }
 }

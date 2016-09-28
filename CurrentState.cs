@@ -12,11 +12,14 @@ using System.Runtime.CompilerServices;
 using DirectShowLib;
 using GMap.NET;
 using GuardShipSystem.Service;
+using MissionPlanner.GCSViews;
 
 namespace MissionPlanner
 {
     public class CurrentState : ICloneable
     {
+
+        public int heartBeatCount = 0;
 
         public delegate void SendQuShuiCommand(int num);
 
@@ -1459,6 +1462,23 @@ namespace MissionPlanner
                     mavLinkMessage = MAV.getPacket((uint) MAVLink.MAVLINK_MSG_ID.HEARTBEAT);
                     if (mavLinkMessage != null)
                     {
+//                        heartBeatCount++;
+//                        Console.WriteLine("Receive Heartbeat"+heartBeatCount);
+//                        if (heartBeatCount == 2000)
+//                        {
+//                            if (sendQuShuiCommand != null)
+//                            {
+//                                try
+//                                {
+////                                    sendQuShuiCommand(4);
+//                                    FlightPlanner.instance.SendQushuiCommand(1);
+//                                }
+//                                catch (Exception)
+//                                {
+//
+//                                }
+//                            }
+//                        }
                         var hb = mavLinkMessage.ToStructure<MAVLink.mavlink_heartbeat_t>();
 
                         if (hb.type == (byte) MAVLink.MAV_TYPE.GCS)
@@ -1820,17 +1840,18 @@ namespace MissionPlanner
                         wp_dist = nav.wp_dist;
                         //如果船的距离小于目标点30米
                         SerialPortHelper.SerialPortHelperInstance.SendAudoJuliData("------"+wp_dist+"---"+wpno);
-                        if (Math.Abs(wp_dist - 30) < 0.1)
+                        if (Math.Abs(wp_dist - 20) < 0.5)
                         {
                             if (sendQuShuiCommand !=null)
                             {
                                 try
                                 {
-                                    sendQuShuiCommand((int)wpno);
+                                    //                                    sendQuShuiCommand();
+                                    FlightPlanner.instance.SendQushuiCommand((int)wpno);
                                 }
                                 catch (Exception)
                                 {
-                                    
+
                                 }
                             }
                         }

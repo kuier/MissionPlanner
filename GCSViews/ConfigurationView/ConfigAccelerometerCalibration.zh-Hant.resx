@@ -263,7 +263,8 @@
     <value>APM設置</value>
   </data>
   <data name="BUT_calib_accell.Text" xml:space="preserve">
-    <value>校準加速度計</value>
+    <value>校準加
+    計</value>
   </data>
   <data name="BUT_level.Text" xml:space="preserve">
     <value>校準水平狀態</value>
