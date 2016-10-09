@@ -6754,9 +6754,10 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 return;
             }
             //如果是自动模式的话才需要降低油门取水
-            if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+            if (MainV2.comPort.MAV.cs.mode.ToUpper() == "AUTO")
             {
                 MainV2.comPort.setParam("CRUISE_THROTTLE", 20);
+                Console.WriteLine("设置油门到20");
                 //
             }
             if (btnQuShui.Text == "取水")
@@ -6845,6 +6846,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             {
                 if (waterColModbus.SendQuShuiMessage(samplingNum, 2500, ref quShuiState))
                 {
+                    isQushui = true;
                     IsWorking = true;
                     SetTbStateText("发送取水查询命令，正在取水");
                     SetButtonText(btnQuShui,"正在取水");
@@ -6879,11 +6881,12 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     {
 
                         IsWorking = false;
+                        isQushui = false;
                         CustomMessageBox.Show("取水未成功", "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         SetTbStateText("取水未成功");
                         SetButtonText(btnQuShui,"取水");
                         //把油门恢复到以前的设置
-                        if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+                        if (MainV2.comPort.MAV.cs.mode.ToUpper() == "AUTO")
                         {
                             MainV2.comPort.setParam("CRUISE_THROTTLE", throttle);
                             //
@@ -6895,12 +6898,14 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             catch (Exception exception)
             {
                 IsWorking = false;
+                isQushui = false;
                 CustomMessageBox.Show(exception.Message, "警告", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 SetTbStateText("取水未成功");
                 SetButtonText(btnQuShui,"取水");
-                if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+                if (MainV2.comPort.MAV.cs.mode.ToUpper() == "AUTO")
                 {
                     MainV2.comPort.setParam("CRUISE_THROTTLE", throttle);
+                    Console.WriteLine("取水未成工时设置油门成功");
                     //
                 }
             }
@@ -6939,14 +6944,17 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     else if (qushuiBytes[0] == 0x1A)
                     {
                         isQuShuiing = false;
+                        isQushui = false;
                         cts.Cancel();
                         if (cts.Token.IsCancellationRequested)
                         {
+                            isQushui = false;
                             SetButtonText(btnQuShui,"取水");
                             SetTbStateText("取水完成");
-                            if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+                            if (MainV2.comPort.MAV.cs.mode.ToUpper() == "AUTO")
                             {
                                 MainV2.comPort.setParam("CRUISE_THROTTLE", throttle);
+                                Console.WriteLine("自动模式下把油门恢复到以前。。。"+throttle);
                                 //
                             }
                             IsWorking = false;
@@ -6965,6 +6973,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     if (count.Equals(5))
                     {
                         isQuShuiing = false;
+                        isQushui = false;
                         SetTbStateText("发送取水查询命令，未收到返回数据,请重新取水");
                         SetButtonText(btnQuShui,"取水");
                         break;
@@ -7611,22 +7620,23 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private bool autoQushui = false;
         private void btnAutoQushui_Click(object sender, EventArgs e)
         {
-            if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
-            {
-                CustomMessageBox.Show("请先开启自动模式", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
-            }
-            try
-            {
-                throttle = (float)MainV2.comPort.MAV.param["CRUISE_THROTTLE"];
-            }
-            catch (Exception exception)
-            {
-                CustomMessageBox.Show(exception.Message);
-                throw;
-            }
+            
             if (autoQushui == false)
             {
+                if (MainV2.comPort.MAV.cs.mode.ToUpper() != "AUTO")
+                {
+                    CustomMessageBox.Show("请先开启自动模式", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                try
+                {
+                    throttle = (float)MainV2.comPort.MAV.param["CRUISE_THROTTLE"];
+                }
+                catch (Exception exception)
+                {
+                    CustomMessageBox.Show(exception.Message);
+                    throw;
+                }
                 autoQushui = true;
                 btnAutoQushui.Text = "关闭自动取水";
                 CurrentState.sendQuShuiCommand = SendQushuiCommand;

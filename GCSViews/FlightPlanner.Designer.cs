@@ -156,10 +156,6 @@
             this.DistanceLabel = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.myButton1 = new MissionPlanner.Controls.MyButton();
-            this.btn_CRUISE_THROTTLE = new MissionPlanner.Controls.MyButton();
             this.panelMap = new System.Windows.Forms.Panel();
             this.lbl_distance = new System.Windows.Forms.Label();
             this.lbl_homedist = new System.Windows.Forms.Label();
@@ -253,8 +249,6 @@
             this.groupBox1.SuspendLayout();
             this.panel9.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.panel10.SuspendLayout();
             this.panelMap.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -631,7 +625,6 @@
             this.flowLayoutPanel1.Controls.Add(this.panel8);
             this.flowLayoutPanel1.Controls.Add(this.groupBox1);
             this.flowLayoutPanel1.Controls.Add(this.groupBox2);
-            this.flowLayoutPanel1.Controls.Add(this.groupBox3);
             resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             // 
@@ -1038,34 +1031,6 @@
             // 
             resources.ApplyResources(this.label9, "label9");
             this.label9.Name = "label9";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.panel10);
-            resources.ApplyResources(this.groupBox3, "groupBox3");
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.TabStop = false;
-            // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.myButton1);
-            this.panel10.Controls.Add(this.btn_CRUISE_THROTTLE);
-            resources.ApplyResources(this.panel10, "panel10");
-            this.panel10.Name = "panel10";
-            // 
-            // myButton1
-            // 
-            resources.ApplyResources(this.myButton1, "myButton1");
-            this.myButton1.Name = "myButton1";
-            this.myButton1.UseVisualStyleBackColor = true;
-            this.myButton1.Click += new System.EventHandler(this.myButton1_Click);
-            // 
-            // btn_CRUISE_THROTTLE
-            // 
-            resources.ApplyResources(this.btn_CRUISE_THROTTLE, "btn_CRUISE_THROTTLE");
-            this.btn_CRUISE_THROTTLE.Name = "btn_CRUISE_THROTTLE";
-            this.btn_CRUISE_THROTTLE.UseVisualStyleBackColor = true;
-            this.btn_CRUISE_THROTTLE.Click += new System.EventHandler(this.btn_CRUISE_THROTTLE_Click_1);
             // 
             // panelMap
             // 
@@ -1664,8 +1629,6 @@
             this.panel9.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
             this.panelMap.ResumeLayout(false);
             this.panelMap.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -1853,9 +1816,5 @@
         private System.Windows.Forms.TextBox tbCejuState;
         private System.Windows.Forms.Label label13;
         private Controls.MyButton btnAutoQushui;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Panel panel10;
-        private Controls.MyButton myButton1;
-        private Controls.MyButton btn_CRUISE_THROTTLE;
     }
 }
